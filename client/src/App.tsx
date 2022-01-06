@@ -1,10 +1,15 @@
 import React from "react";
 import "./App.scss";
+import Login from "./components/login/Login";
+import Profile from "./components/profile/Profile";
+import SignUp from "./components/signup/Signup";
 
 function App() {
   return (
-    <div className="App">
-      <h1>Hello Client</h1>
+    <div className="container">
+      <Login />
+      <SignUp />
+      <Profile />
     </div>
   );
 }

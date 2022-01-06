@@ -1,5 +1,5 @@
 import * as React from "react";
-import "./Profle.scss";
+import "./Profile.scss";
 
 const Profile: React.FunctionComponent = () => {
   return <h1>Profile</h1>;
