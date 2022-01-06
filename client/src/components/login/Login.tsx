@@ -18,7 +18,24 @@ const Login: React.FunctionComponent = () => {
           <p>projects. There are multiple paths for you to </p>
           <p>choose</p>
         </div>
-        <form className="login-box__form"></form>
+        <form className="login-box__form">
+          <div className="login-box__form-control">
+            <i className="fa fa-envelope fa-lg" aria-hidden="true"></i>
+            <input type="email" name="email" id="email" placeholder="Email" />
+          </div>
+          <div className="login-box__form-control">
+            <i className="fa fa-lock fa-2x" aria-hidden="true"></i>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Password"
+            />
+          </div>
+          <button className="login-box__form-button" type="submit">
+            Start coding now
+          </button>
+        </form>
         <div className="login-box__socials">
           <p>or continue with these social profile</p>
           <div className="login-box__social-icons">
