@@ -1,0 +1,13 @@
+.login-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .login-box {
+    max-width: 450px;
+    width: 100%;
+    border: 1px solid #bdbdbd;
+    border-radius: 24px;
+    min-height: 500px;
+  }
+}
