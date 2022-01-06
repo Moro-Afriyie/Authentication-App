@@ -16,8 +16,31 @@ const Login: React.FunctionComponent = () => {
           <p>choose</p>
         </div>
         <form className="login-box__form"></form>
-        <div className="login-box__socials"></div>
-        <div className="login-box__link"></div>
+        <div className="login-box__socials">
+          <p>or continue with these social profile</p>
+          <div className="login-box__social-icons">
+            <div className="icon">
+              <i className="fa fa-google fa-lg" aria-hidden="true"></i>
+            </div>
+            <div className="icon">
+              <i
+                className="fa fa-facebook-official fa-lg"
+                aria-hidden="true"
+              ></i>
+            </div>
+            <div className="icon">
+              <i className="fa fa-twitter fa-lg" aria-hidden="true"></i>
+            </div>
+            <div className="icon">
+              <i className="fa fa-github fa-lg" aria-hidden="true"></i>
+            </div>
+          </div>
+        </div>
+        <div className="login-box__link">
+          <p>
+            Don&apos;t have an account? <a href="#">SignUp</a>
+          </p>
+        </div>
       </div>
     </div>
   );
