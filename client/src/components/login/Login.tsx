@@ -14,9 +14,15 @@ const Login: React.FunctionComponent = () => {
           <p>around the world </p>
         </div>
         <div className="login-box__body">
-          <p>Master web development by making real-life</p>
-          <p>projects. There are multiple paths for you to </p>
-          <p>choose</p>
+          <p className="mobile-text">
+            Master web development by making real-life projects. There are
+            multiple paths for you to choose
+          </p>
+          <div className="desktop-text">
+            <p>Master web development by making real-life</p>
+            <p>projects. There are multiple paths for you to </p>
+            <p>choose</p>
+          </div>
         </div>
         <form className="login-box__form">
           <div className="login-box__form-control">
