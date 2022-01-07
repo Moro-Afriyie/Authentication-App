@@ -18,6 +18,7 @@ const Profile: React.FunctionComponent = () => {
               </div>
               <p>Xanthe Neal</p>
               <i className="fa fa-caret-down" aria-hidden="true"></i>
+              {/* <i className="fa fa-caret-up" aria-hidden="true"></i> */}
             </div>
             <div className="drop-down__menu">
               <h1>menu</h1>
