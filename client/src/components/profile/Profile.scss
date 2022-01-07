@@ -8,6 +8,49 @@
       justify-content: space-between;
       height: 50px;
       padding: 0 3rem;
+      .profile__nav-avatar {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .profile__nav-avatar-controls {
+          display: flex;
+          gap: 1rem;
+          align-items: center;
+          font-family: "Noto Sans", sans-serif;
+          .avatar {
+            height: 36px;
+            width: 36px;
+            border-radius: 10px;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
+              border-radius: 10px;
+            }
+          }
+          p {
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 16px;
+            letter-spacing: -0.035em;
+            text-align: left;
+            cursor: pointer;
+            text-transform: capitalize;
+          }
+        }
+        .drop-down__menu {
+          position: absolute;
+          border: 1px solid #e0e0e0;
+          height: 174px;
+          width: 188px;
+          top: 70px;
+          border-radius: 12px;
+          box-shadow: 0px 2px 4px 0px #0000000d;
+          background-color: #ffffff;
+        }
+      }
     }
   }
 }
