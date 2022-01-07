@@ -21,7 +21,21 @@ const Profile: React.FunctionComponent = () => {
               {/* <i className="fa fa-caret-up" aria-hidden="true"></i> */}
             </div>
             <div className="drop-down__menu">
-              <h1>menu</h1>
+              <div className="drop-down__menu-links">
+                <div className="link-item">
+                  <span className="material-icons">account_circle</span>
+                  <p>My Profile</p>
+                </div>
+                <div className="link-item">
+                  <span className="material-icons">group</span>
+                  <p>Group Chat</p>
+                </div>
+
+                <div className="linki-tem logout">
+                  <span className="material-icons">exit_to_app</span>
+                  <p>Logout</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
