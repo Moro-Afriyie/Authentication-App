@@ -1,6 +1,7 @@
 import * as React from "react";
 import "./Profile.scss";
 import logo from "../../assets/devchallenges.svg";
+import avatar from "../../assets/avatar.jpg";
 
 const Profile: React.FunctionComponent = () => {
   return (
@@ -11,7 +12,16 @@ const Profile: React.FunctionComponent = () => {
             <img src={logo} alt="logo" />
           </div>
           <div className="profile__nav-avatar">
-            <h1>Avatar</h1>
+            <div className="profile__nav-avatar-controls">
+              <div className="avatar">
+                <img src={avatar} alt="profile picture" />
+              </div>
+              <p>Xanthe Neal</p>
+              <i className="fa fa-caret-down" aria-hidden="true"></i>
+            </div>
+            <div className="drop-down__menu">
+              <h1>menu</h1>
+            </div>
           </div>
         </div>
         <div className="profile__info">
