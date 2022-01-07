@@ -66,6 +66,8 @@
               gap: 1rem;
               padding: 0.5rem 0.7rem;
               border-radius: 8px;
+              cursor: pointer;
+              transition: background-color 100ms ease-in-out;
               p {
                 font-size: 13px;
                 font-style: normal;
@@ -78,6 +80,9 @@
             .profile,
             .group {
               color: #4f4f4f;
+              &:hover {
+                background-color: #f2f2f2;
+              }
             }
             .active {
               background-color: #f2f2f2;
