@@ -7,12 +7,10 @@ import NavBar from "../navbar/NavBar";
 const Profile: React.FunctionComponent = () => {
   return (
     <div className="profile-container">
-      <div className="profile">
-        <NavBar />
-        <div className="profile__info-box">
-          <ProfileDetails />
-          <EditProfile />
-        </div>
+      <NavBar />
+      <div className="profile__info-box">
+        <ProfileDetails />
+        {/* <EditProfile /> */}
       </div>
     </div>
   );
