@@ -2,6 +2,8 @@ import * as React from "react";
 import "./Profile.scss";
 import logo from "../../assets/devchallenges.svg";
 import avatar from "../../assets/avatar.jpg";
+import ProfileDetails from "../profileDetails/ProfileDetails";
+import EditProfile from "../editProfile/EditProfile";
 
 const Profile: React.FunctionComponent = () => {
   const [menu, setMenu] = React.useState(false);
@@ -53,9 +55,9 @@ const Profile: React.FunctionComponent = () => {
             )}
           </div>
         </div>
-        <div className="profile__info">
-          <div className="profile__info-header"></div>
-          <div className="profile__info-details"></div>
+        <div className="profile__info-box">
+          <ProfileDetails />
+          <EditProfile />
         </div>
       </div>
     </div>
