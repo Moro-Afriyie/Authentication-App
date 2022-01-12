@@ -13,7 +13,6 @@ const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
         <p className="bold">Personal info</p>
         <p className="faint">Basic info, like your name and photo</p>
       </div>
-      {/* <div className="profile-details-box__info"> */}
       <ul className="profile-details-box__info">
         <li className="profile-details-box__info-controls">
           <div className="profile">
@@ -22,14 +21,31 @@ const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
           </div>
           <div className="edit">Edit</div>
         </li>
-        <li className="photo">phone</li>
-        <li className="name">name</li>
-        <li className="bio">bio</li>
-        <li className="phone-number">number</li>
-        <li className="email">email</li>
-        <li className="password">password</li>
+        <li>
+          <p className="left-text">photo</p>
+          <p className="right-text">908249274292</p>
+        </li>
+        <li>
+          <p className="left-text">Name</p>
+          <p className="right-text">908249274292</p>
+        </li>
+        <li>
+          <p className="left-text">Bio</p>
+          <p className="right-text">908249274292</p>
+        </li>
+        <li>
+          <p className="left-text">phone</p>
+          <p className="right-text">908249274292</p>
+        </li>
+        <li>
+          <p className="left-text">Email</p>
+          <p className="right-text">908249274292</p>
+        </li>
+        <li className="password">
+          <p className="left-text">Password</p>
+          <p className="right-text">908249274292</p>
+        </li>
       </ul>
-      {/* </div> */}
     </div>
   );
 };
