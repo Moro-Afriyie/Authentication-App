@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,kBAAkB,CAAC;EACjB,gBAAgB,EAAE,OAAO;EACzB,OAAO,EAAE,IAAI;EACb,cAAc,EAAE,MAAM;EACtB,GAAG,EAAE,IAAI;CAMV;;AAVD,AAKE,kBALgB,CAKhB,kBAAkB,CAAC;EACjB,SAAS,EAAE,OAAO;EAClB,KAAK,EAAE,IAAI;EACX,MAAM,EAAE,SAAS;CAClB",
+    "sources": [
+        "../../client/src/components/profile/Profile.scss"
+    ],
+    "names": [],
+    "file": "Profile.css"
+}

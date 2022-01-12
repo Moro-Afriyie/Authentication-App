@@ -1,0 +1,18 @@
+.profile-container {
+  background-color: #fafafb;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 2rem;
+}
+
+.profile-container .profile__info-box {
+  max-width: 52.5rem;
+  width: 100%;
+  margin: 0rem auto;
+}
+/*# sourceMappingURL=Profile.css.map */
