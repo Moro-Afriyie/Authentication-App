@@ -4,6 +4,9 @@
   justify-content: space-between;
   height: 3.2rem;
   padding: 0 3rem;
+  @media screen and (max-width: 450px) {
+    padding: 0 0.5rem;
+  }
   .profile__nav-avatar {
     position: relative;
     display: flex;
@@ -45,6 +48,9 @@
       box-shadow: 0rem 0.125rem 0.25rem 0rem #0000000d;
       background-color: #ffffff;
       padding: 1rem;
+      @media screen and (max-width: 450px) {
+        right: 6%;
+      }
       .drop-down__menu-links {
         list-style: none;
         display: flex;

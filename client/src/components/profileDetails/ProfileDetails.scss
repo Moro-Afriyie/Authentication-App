@@ -1,8 +1,10 @@
 .profile-details-box {
-  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  @media screen and (max-width: 860px) {
+    margin: auto 1.5rem;
+  }
   .profile-details-box__header {
     align-self: center;
     display: flex;
@@ -36,11 +38,17 @@
     display: grid;
     list-style: none;
     grid-template-rows: repeat(7, 1fr);
+    @media screen and (max-width: 450px) {
+      border: none;
+    }
     li {
       border-bottom: 1px solid #d3d3d3;
       display: flex;
       align-items: center;
       padding: 0rem 2rem;
+      @media screen and (max-width: 450px) {
+        padding: 0;
+      }
       .left-text {
         text-transform: uppercase;
         font-size: 0.85rem;
@@ -62,9 +70,20 @@
         text-align: left;
         color: #333333;
         flex: 0.8;
+        @media screen and (max-width: 380px) {
+          font-size: 0.85rem;
+        }
+        @media screen and (max-width: 450px) {
+          display: flex;
+          justify-content: flex-end;
+        }
       }
       .image {
         flex: 0.8;
+        @media screen and (max-width: 450px) {
+          display: flex;
+          justify-content: flex-end;
+        }
         img {
           width: 60px;
           height: 60px;
@@ -79,7 +98,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-
+      @media screen and (max-width: 450px) {
+        border: none;
+        gap: 2rem;
+      }
       .profile {
         .light-bold {
           font-size: 24px;
