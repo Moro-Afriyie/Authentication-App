@@ -5,7 +5,12 @@ import "./EditProfile.scss";
 interface IEditProfileProps {}
 
 const EditProfile: React.FunctionComponent<IEditProfileProps> = (props) => {
-  return <h1>Edit Profile</h1>;
+  return (
+    <div className="edit-profile-details-box">
+      <div className="back">back</div>
+      <div className="edit-details-info"></div>
+    </div>
+  );
 };
 
 export default EditProfile;
