@@ -10,10 +10,11 @@ const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
   return (
     <div className="profile-details-box">
       <div className="profile-details-box__header">
-        <h1>header</h1>
+        <p className="bold">Personal info</p>
+        <p className="faint">Basic info, like your name and photo</p>
       </div>
       <div className="profile-details-box__info">
-        <h1>Infor</h1>
+        <h1>Info</h1>
       </div>
     </div>
   );
