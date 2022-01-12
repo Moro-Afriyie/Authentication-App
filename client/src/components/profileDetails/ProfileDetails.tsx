@@ -7,7 +7,16 @@ interface IProfileDetailsProps {}
 const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
   props
 ) => {
-  return <h1>Profile Details</h1>;
+  return (
+    <div className="profile-details-box">
+      <div className="profile-details-box__header">
+        <h1>header</h1>
+      </div>
+      <div className="profile-details-box__info">
+        <h1>Infor</h1>
+      </div>
+    </div>
+  );
 };
 
 export default ProfileDetails;
