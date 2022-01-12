@@ -55,13 +55,43 @@
       justify-content: space-between;
 
       .profile {
+        .light-bold {
+          font-size: 24px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 33px;
+          letter-spacing: -0.035em;
+          text-align: left;
+        }
+        .light {
+          font-size: 13px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 18px;
+          letter-spacing: -0.035em;
+          text-align: left;
+          color: #828282;
+        }
       }
       .edit {
+        width: 95px;
+        height: 38px;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 22px;
+        letter-spacing: -0.035em;
+        text-align: left;
+        color: #828282;
+        border: 1px solid #828282;
+        box-sizing: border-box;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
       }
     }
-    // & > * {
-    //   border-bottom: 1px solid #d3d3d3;
-    //   flex-basis: 100%;
-    // }
   }
 }

@@ -20,7 +20,7 @@ const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
             <p className="ligt-bold">Profile</p>
             <p className="light">Some info may be visible to other people</p>
           </div>
-          <div className="edit">edit</div>
+          <div className="edit">Edit</div>
         </li>
         <li className="photo">phone</li>
         <li className="name">name</li>
