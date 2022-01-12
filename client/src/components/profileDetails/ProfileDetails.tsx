@@ -1,5 +1,6 @@
 import * as React from "react";
 import "./ProfileDetails.scss";
+import avatar from "../../assets/avatar.jpg";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProfileDetailsProps {}
@@ -23,15 +24,19 @@ const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
         </li>
         <li>
           <p className="left-text">photo</p>
-          <p className="right-text">908249274292</p>
+          <div className="image">
+            <img src={avatar} alt="profile image" />
+          </div>
         </li>
         <li>
           <p className="left-text">Name</p>
-          <p className="right-text">908249274292</p>
+          <p className="right-text">Xanthe Neal</p>
         </li>
         <li>
           <p className="left-text">Bio</p>
-          <p className="right-text">908249274292</p>
+          <p className="right-text">
+            I am a software developer and a big fan of devchallenges...
+          </p>
         </li>
         <li>
           <p className="left-text">phone</p>
@@ -39,11 +44,11 @@ const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
         </li>
         <li>
           <p className="left-text">Email</p>
-          <p className="right-text">908249274292</p>
+          <p className="right-text">xanthe.neal@gmail.com</p>
         </li>
         <li className="password">
           <p className="left-text">Password</p>
-          <p className="right-text">908249274292</p>
+          <p className="right-text">************</p>
         </li>
       </ul>
     </div>

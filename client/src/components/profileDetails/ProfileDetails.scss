@@ -35,6 +35,7 @@
     margin-bottom: 3rem;
     display: grid;
     list-style: none;
+    grid-template-rows: repeat(7, 1fr);
     li {
       border-bottom: 1px solid #d3d3d3;
       display: flex;
@@ -42,13 +43,32 @@
       padding: 0rem 2rem;
       .left-text {
         text-transform: uppercase;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         font-style: normal;
         font-weight: 500;
         line-height: 18px;
         letter-spacing: -0.035em;
         text-align: left;
         color: #bdbdbd;
+        flex: 0.2;
+      }
+      .right-text {
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 25px;
+        letter-spacing: -0.035em;
+        text-align: left;
+        color: #333333;
+        flex: 0.8;
+      }
+      .image {
+        flex: 0.8;
+        img {
+          width: 60px;
+          height: 60px;
+          border-radius: 8px;
+        }
       }
     }
     .password {
