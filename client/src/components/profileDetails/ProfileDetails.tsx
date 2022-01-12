@@ -14,7 +14,8 @@ const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
         <p className="faint">Basic info, like your name and photo</p>
       </div>
       <div className="profile-details-box__info">
-        <h1>Info</h1>
+        <div className="profile-details-box__info-controls"></div>
+        <div className="profile-details-box__info-lists"></div>
       </div>
     </div>
   );

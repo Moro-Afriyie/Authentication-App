@@ -1,5 +1,4 @@
 .profile-details-box {
-  border: 1px solid red;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -25,5 +24,13 @@
       letter-spacing: -0.035em;
       text-align: left;
     }
+  }
+  .profile-details-box__info {
+    border: 1px solid #e0e0e0;
+    box-sizing: border-box;
+    border-radius: 12px;
+    width: 100%;
+    min-height: 560px;
+    margin-bottom: 3rem;
   }
 }
