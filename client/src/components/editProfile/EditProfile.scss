@@ -19,5 +19,24 @@
     @media screen and (max-width: 450px) {
       border: none;
     }
+    .edit-details-info__header {
+      .bold {
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 33px;
+        letter-spacing: -0.035em;
+        text-align: left;
+      }
+      .light {
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 18px;
+        letter-spacing: -0.035em;
+        text-align: left;
+        color: #828282;
+      }
+    }
   }
 }

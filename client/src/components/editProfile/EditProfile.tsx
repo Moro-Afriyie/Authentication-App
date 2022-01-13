@@ -8,7 +8,13 @@ const EditProfile: React.FunctionComponent<IEditProfileProps> = (props) => {
   return (
     <div className="edit-profile-details-box">
       <div className="back">back</div>
-      <div className="edit-details-info"></div>
+      <div className="edit-details-info">
+        <div className="edit-details-info__header">
+          <p className="bold">Change Info</p>
+          <p className="light">Changes will be reflected to every services</p>
+        </div>
+        <div className="edit-details-info__form"></div>
+      </div>
     </div>
   );
 };
