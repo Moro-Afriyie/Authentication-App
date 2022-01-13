@@ -5,6 +5,14 @@
   @media screen and (max-width: 860px) {
     margin: auto 1.5rem;
   }
+  .back {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    text-transform: capitalize;
+    color: #2d9cdb;
+    cursor: pointer;
+  }
   .edit-details-info {
     border: 1px solid #e0e0e0;
     padding: 2rem;
@@ -14,9 +22,10 @@
     height: 100%;
     min-height: 830px;
     margin-bottom: 3rem;
-    display: grid;
     list-style: none;
-    grid-template-rows: repeat(7, 1fr);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
     @media screen and (max-width: 450px) {
       border: none;
     }
@@ -40,6 +49,11 @@
       }
     }
     .edit-details-info__form {
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
       .change-photo {
         label {
           display: flex;
@@ -52,12 +66,21 @@
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          border-radius: 8px;
           background-size: cover;
           background-position: center;
           background-repeat: no-repeat;
-          span {
-            color: #ffffff;
+          border-radius: 8px;
+          .icon {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.3);
+            span {
+              color: #ffffff;
+            }
           }
         }
         p {
@@ -73,6 +96,61 @@
         input {
           display: none;
         }
+      }
+      .form-control {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        label {
+          font-family: "Noto Sans", sans-serif;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 18px;
+          letter-spacing: -0.035em;
+          text-align: left;
+          color: #4f4f4f;
+        }
+        input,
+        #bio {
+          max-width: 416px;
+          width: 100%;
+          background-color: transparent;
+          border: 1px solid #828282;
+          box-sizing: border-box;
+          border-radius: 12px;
+          font-family: "Noto Sans", sans-serif;
+          font-size: 13px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 18px;
+          letter-spacing: -0.035em;
+          text-align: left;
+        }
+        input {
+          height: 52px;
+          display: flex;
+          align-items: center;
+          padding: 0 1rem;
+        }
+        #bio {
+          height: 92px;
+          padding: 0.5rem 1rem;
+        }
+      }
+      .submit {
+        height: 38px;
+        width: 82px;
+        border-radius: 8px;
+        background-color: #2f80ed;
+        color: #ffffff;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 22px;
+        letter-spacing: -0.035em;
+        border: 1px solid #2f80ed;
+        cursor: pointer;
       }
     }
   }
