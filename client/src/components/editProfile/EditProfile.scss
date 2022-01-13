@@ -39,5 +39,24 @@
         color: #828282;
       }
     }
+    .edit-details-info__form {
+      .change-photo {
+        .photo-icon {
+          width: 72px;
+          height: 72px;
+          border: 1px solid red;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          span {
+            color: #ffffff;
+          }
+        }
+        input {
+          display: none;
+        }
+      }
+    }
   }
 }
