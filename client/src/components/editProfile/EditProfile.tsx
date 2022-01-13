@@ -31,7 +31,7 @@ const EditProfile: React.FunctionComponent<IEditProfileProps> = (props) => {
                 </div>
                 <p>CHANGE PHOTO</p>
               </label>
-              <input type="file" name="photo" id="photo" />
+              <input type="file" name="photo" id="photo" accept="image/*" />
             </div>
             <div className="form-control">
               <label htmlFor="name">Name</label>
