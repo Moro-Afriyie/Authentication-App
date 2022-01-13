@@ -1,5 +1,6 @@
 import * as React from "react";
 import "./EditProfile.scss";
+import avatar from "../../assets/avatar.jpg";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IEditProfileProps {}
@@ -17,7 +18,10 @@ const EditProfile: React.FunctionComponent<IEditProfileProps> = (props) => {
           <form>
             <div className="change-photo">
               <label htmlFor="photo">
-                <div className="photo-icon">
+                <div
+                  className="photo-icon"
+                  style={{ backgroundImage: `url(${avatar})` }}
+                >
                   <span className="material-icons">photo_camera</span>
                 </div>
               </label>
