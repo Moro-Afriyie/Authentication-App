@@ -27,7 +27,7 @@ const Login: React.FunctionComponent = () => {
             />
           </div>
           <button className="login-box__form-button" type="submit">
-            Start coding now
+            Login
           </button>
         </form>
         <div className="login-box__socials">
