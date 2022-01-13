@@ -10,19 +10,7 @@ const Login: React.FunctionComponent = () => {
           <img src={logo} alt="logo" />
         </div>
         <div className="login-box__heading">
-          <p>Join thousands of learners from</p>
-          <p>around the world </p>
-        </div>
-        <div className="login-box__body">
-          <p className="mobile-text">
-            Master web development by making real-life projects. There are
-            multiple paths for you to choose
-          </p>
-          <div className="desktop-text">
-            <p>Master web development by making real-life</p>
-            <p>projects. There are multiple paths for you to </p>
-            <p>choose</p>
-          </div>
+          <p>Login</p>
         </div>
         <form className="login-box__form">
           <div className="login-box__form-control">

@@ -9,8 +9,8 @@ const Profile: React.FunctionComponent = () => {
     <div className="profile-container">
       <NavBar />
       <div className="profile__info-box">
-        {/* <ProfileDetails /> */}
-        <EditProfile />
+        <ProfileDetails />
+        {/* <EditProfile /> */}
       </div>
     </div>
   );

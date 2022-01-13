@@ -20,7 +20,7 @@
     width: 100%;
     border: 0.063rem solid #bdbdbd;
     border-radius: 1.5rem;
-    min-height: 31.25rem;
+    min-height: 27rem;
     padding: 2.5rem 3rem;
     display: flex;
     flex-direction: column;
@@ -40,29 +40,6 @@
       letter-spacing: -0.035em;
       text-align: left;
       color: #333333;
-    }
-    .login-box__body {
-      font-size: 1rem;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 1.375rem;
-      letter-spacing: -0.035em;
-      text-align: left;
-      color: #333333;
-      .mobile-text {
-        display: none;
-      }
-      .desktop-text {
-        display: block;
-      }
-      @media screen and (max-width: 450px) {
-        .mobile-text {
-          display: block;
-        }
-        .desktop-text {
-          display: none;
-        }
-      }
     }
     .login-box__form {
       display: flex;
