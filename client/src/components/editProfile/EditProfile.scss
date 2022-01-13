@@ -41,10 +41,13 @@
     }
     .edit-details-info__form {
       .change-photo {
+        label {
+          display: flex;
+          gap: 1rem;
+        }
         .photo-icon {
           width: 72px;
           height: 72px;
-          border: 1px solid red;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -56,6 +59,16 @@
           span {
             color: #ffffff;
           }
+        }
+        p {
+          font-style: normal;
+          font-weight: 500;
+          font-size: 13px;
+          line-height: 18px;
+          letter-spacing: -0.035em;
+          color: #828282;
+          text-transform: capitalize;
+          align-self: center;
         }
         input {
           display: none;

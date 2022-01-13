@@ -24,6 +24,7 @@ const EditProfile: React.FunctionComponent<IEditProfileProps> = (props) => {
                 >
                   <span className="material-icons">photo_camera</span>
                 </div>
+                <p>CHANGE PHOTO</p>
               </label>
               <input type="file" name="photo" id="photo" />
             </div>
