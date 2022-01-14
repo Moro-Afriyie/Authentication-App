@@ -3,7 +3,7 @@ import "./App.scss";
 import Login from "./components/login/Login";
 import Profile from "./components/profile/Profile";
 import SignUp from "./components/signup/Signup";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import ProfileDetails from "./components/profileDetails/ProfileDetails";
 import EditProfile from "./components/editProfile/EditProfile";
 
