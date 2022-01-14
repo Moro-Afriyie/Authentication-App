@@ -11,14 +11,13 @@ function App() {
   return (
     <div className="container">
       <Routes>
-        <Route path="/" element={<App />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<SignUp />} />
-          <Route path="profile" element={<Profile />}>
-            <Route path=":username" element={<ProfileDetails />} />
-            <Route path="settings/profile" element={<EditProfile />} />
-          </Route>
+        <Route path="/" element={<Profile />}>
+          {/* <Route path=":username" element={<ProfileDetails />} /> */}
+          <Route path="/username" element={<ProfileDetails />} />
+          <Route path="settings/profile" element={<EditProfile />} />
         </Route>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<SignUp />} />
         {/* <Login /> */}
         {/* <SignUp /> */}
         {/* <Profile /> */}
