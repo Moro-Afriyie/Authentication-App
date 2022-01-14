@@ -13,14 +13,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Profile />}>
           {/* <Route path=":username" element={<ProfileDetails />} /> */}
-          <Route index path="/username" element={<ProfileDetails />} />
+          <Route index element={<ProfileDetails />} />
+          <Route path="/username" element={<ProfileDetails />} />
           <Route path="settings/profile" element={<EditProfile />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
-        {/* <Login /> */}
-        {/* <SignUp /> */}
-        {/* <Profile /> */}
       </Routes>
     </div>
   );
