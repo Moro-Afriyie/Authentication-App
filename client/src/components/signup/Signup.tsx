@@ -14,6 +14,15 @@ const SignUp: React.FunctionComponent = () => {
         </div>
         <form className="login-box__form">
           <div className="login-box__form-control">
+            <i className="fa fa-user-circle-o fa-lg" aria-hidden="true"></i>
+            <input
+              type="text"
+              name="userName"
+              id="userName"
+              placeholder="User Name"
+            />
+          </div>
+          <div className="login-box__form-control">
             <i className="fa fa-envelope fa-lg" aria-hidden="true"></i>
             <input type="email" name="email" id="email" placeholder="Email" />
           </div>
