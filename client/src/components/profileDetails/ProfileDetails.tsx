@@ -21,7 +21,7 @@ const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
             <p className="ligt-bold">Profile</p>
             <p className="light">Some info may be visible to other people</p>
           </div>
-          <Link className="edit" to="/settings/profile">
+          <Link className="edit" to="/profile/settings">
             Edit
           </Link>
           {/* <div className="edit">

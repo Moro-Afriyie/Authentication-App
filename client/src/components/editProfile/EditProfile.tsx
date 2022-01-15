@@ -9,7 +9,7 @@ interface IEditProfileProps {}
 const EditProfile: React.FunctionComponent<IEditProfileProps> = (props) => {
   return (
     <div className="edit-profile-details-box">
-      <Link className="back" to="/username">
+      <Link className="back" to="/profile/username">
         <span className="material-icons">arrow_back_ios_new</span>
         <p>back</p>
       </Link>
