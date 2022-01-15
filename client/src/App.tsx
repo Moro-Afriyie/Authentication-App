@@ -14,7 +14,7 @@ function App() {
         <Route path="/" element={<Profile />}>
           {/* <Route path=":username" element={<ProfileDetails />} /> */}
           <Route index element={<ProfileDetails />} />
-          <Route path="/username" element={<ProfileDetails />} />
+          <Route path="username" element={<ProfileDetails />} />
           <Route path="settings/profile" element={<EditProfile />} />
         </Route>
         {/* <Route path="/" element={<Navigate replace to="/login" />} /> */}
