@@ -1,6 +1,7 @@
 import * as React from "react";
 import "./EditProfile.scss";
 import avatar from "../../assets/avatar.jpg";
+import { Link } from "react-router-dom";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IEditProfileProps {}
@@ -8,10 +9,14 @@ interface IEditProfileProps {}
 const EditProfile: React.FunctionComponent<IEditProfileProps> = (props) => {
   return (
     <div className="edit-profile-details-box">
-      <div className="back">
+      <Link className="back" to="/username">
         <span className="material-icons">arrow_back_ios_new</span>
         <p>back</p>
-      </div>
+      </Link>
+      {/* <div className="back">
+        <span className="material-icons">arrow_back_ios_new</span>
+        <p>back</p>
+      </div> */}
       <div className="edit-details-info">
         <div className="edit-details-info__header">
           <p className="bold">Change Info</p>

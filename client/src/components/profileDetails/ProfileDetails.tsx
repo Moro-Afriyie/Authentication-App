@@ -1,6 +1,7 @@
 import * as React from "react";
 import "./ProfileDetails.scss";
 import avatar from "../../assets/avatar.jpg";
+import { Link } from "react-router-dom";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProfileDetailsProps {}
@@ -20,7 +21,11 @@ const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
             <p className="ligt-bold">Profile</p>
             <p className="light">Some info may be visible to other people</p>
           </div>
-          <div className="edit">Edit</div>
+          <Link className="edit" to="/settings/profile">
+            Edit
+          </Link>
+          {/* <div className="edit">
+            Edit</div> */}
         </li>
         <li>
           <p className="left-text">photo</p>

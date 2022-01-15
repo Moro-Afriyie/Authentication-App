@@ -1,6 +1,7 @@
 import * as React from "react";
 import "./SignUp.scss";
 import logo from "../../assets/devchallenges.svg";
+import { Link } from "react-router-dom";
 
 const SignUp: React.FunctionComponent = () => {
   return (
@@ -61,7 +62,7 @@ const SignUp: React.FunctionComponent = () => {
         </div>
         <div className="login-box__link">
           <p>
-            Don&apos;t have an account? <a href="#">SignUp</a>
+            Already have an account?<Link to="/login">Login</Link>
           </p>
         </div>
       </div>
