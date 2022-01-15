@@ -3,7 +3,7 @@ import "./App.scss";
 import Login from "./components/login/Login";
 import Profile from "./components/profile/Profile";
 import SignUp from "./components/signup/Signup";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ProfileDetails from "./components/profileDetails/ProfileDetails";
 import EditProfile from "./components/editProfile/EditProfile";
 
@@ -13,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Profile />}>
           {/* <Route path=":username" element={<ProfileDetails />} /> */}
+          <Route path="/" element={<Navigate replace to="/username" />} />
           <Route index element={<ProfileDetails />} />
           <Route path="/username" element={<ProfileDetails />} />
           <Route path="settings/profile" element={<EditProfile />} />
