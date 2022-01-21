@@ -12,10 +12,10 @@
     text-transform: capitalize;
     color: #2d9cdb;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 1.125rem;
     font-style: normal;
     font-weight: 400;
-    line-height: 25px;
+    line-height: 1.56rem;
     letter-spacing: -0.035em;
     text-align: left;
     text-decoration: none;
@@ -24,10 +24,10 @@
     border: 1px solid #e0e0e0;
     padding: 2rem;
     box-sizing: border-box;
-    border-radius: 12px;
+    border-radius: 0.75rem;
     width: 100%;
     height: 100%;
-    min-height: 830px;
+    min-height: 51.875rem;
     margin-bottom: 3rem;
     list-style: none;
     display: flex;
@@ -39,18 +39,18 @@
     }
     .edit-details-info__header {
       .bold {
-        font-size: 24px;
+        font-size: 1.5rem;
         font-style: normal;
         font-weight: 400;
-        line-height: 33px;
+        line-height: 2.063rem;
         letter-spacing: -0.035em;
         text-align: left;
       }
       .light {
-        font-size: 13px;
+        font-size: 0.813rem;
         font-style: normal;
         font-weight: 500;
-        line-height: 18px;
+        line-height: 1.125rem;
         letter-spacing: -0.035em;
         text-align: left;
         color: #828282;
@@ -67,8 +67,8 @@
         gap: 1rem;
 
         .photo-icon {
-          width: 72px;
-          height: 72px;
+          width: 4.5rem;
+          height: 4.5rem;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -76,11 +76,11 @@
           background-size: cover;
           background-position: center;
           background-repeat: no-repeat;
-          border-radius: 8px;
+          border-radius: 0.5rem;
           .icon {
             width: 100%;
             height: 100%;
-            border-radius: 8px;
+            border-radius: 0.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -93,8 +93,8 @@
         p {
           font-style: normal;
           font-weight: 500;
-          font-size: 13px;
-          line-height: 18px;
+          font-size: 0.813rem;
+          line-height: 1.125rem;
           letter-spacing: -0.035em;
           color: #828282;
           text-transform: capitalize;
@@ -110,51 +110,51 @@
         gap: 0.5rem;
         label {
           font-family: "Noto Sans", sans-serif;
-          font-size: 14px;
+          font-size: 0.875rem;
           font-style: normal;
           font-weight: 600;
-          line-height: 18px;
+          line-height: 1.125rem;
           letter-spacing: -0.035em;
           text-align: left;
           color: #4f4f4f;
         }
         input,
         #bio {
-          max-width: 416px;
+          max-width: 26rem;
           width: 100%;
           background-color: transparent;
           border: 1px solid #828282;
           box-sizing: border-box;
-          border-radius: 12px;
+          border-radius: 0.75rem;
           font-family: "Noto Sans", sans-serif;
-          font-size: 13px;
+          font-size: 0.813rem;
           font-style: normal;
           font-weight: 500;
-          line-height: 18px;
+          line-height: 1.125rem;
           letter-spacing: -0.035em;
           text-align: left;
         }
         input {
-          height: 52px;
+          height: 3.25rem;
           display: flex;
           align-items: center;
           padding: 0 1rem;
         }
         #bio {
-          height: 92px;
+          height: 5.75rem;
           padding: 0.5rem 1rem;
         }
       }
       .submit {
-        height: 38px;
-        width: 82px;
-        border-radius: 8px;
+        height: 2.375rem;
+        width: 5.125rem;
+        border-radius: 0.5rem;
         background-color: #2f80ed;
         color: #ffffff;
-        font-size: 16px;
+        font-size: 1rem;
         font-style: normal;
         font-weight: 500;
-        line-height: 22px;
+        line-height: 1.375rem;
         letter-spacing: -0.035em;
         border: 1px solid #2f80ed;
         cursor: pointer;
