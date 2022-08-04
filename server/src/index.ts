@@ -12,7 +12,9 @@ AppDataSource.initialize()
 		server.listen(port);
 
 		server.on('listening', () => {
-			console.log(`My unsplash API running in ${process.env.NODE_ENV} on port ${port} 🚀🚀🚀🚀`);
+			console.log(
+				`Authentication App API running in ${process.env.NODE_ENV} on port ${port} 🚀🚀🚀🚀`
+			);
 		});
 	})
 	.catch((error) => console.log(error));
