@@ -5,6 +5,8 @@
 	"type": "commonjs",
 	"devDependencies": {
 		"@types/node": "^16.11.10",
+		"@types/passport": "^1.0.10",
+		"@types/passport-google-oauth20": "^2.0.11",
 		"ts-node": "10.7.0",
 		"typescript": "4.5.2"
 	},
@@ -18,6 +20,7 @@
 		"joi": "^17.6.0",
 		"mysql": "^2.14.1",
 		"mysql2": "^2.3.3",
+		"passport": "^0.6.0",
 		"passport-google-oauth20": "^2.0.0",
 		"reflect-metadata": "^0.1.13",
 		"ts-node": "10.7.0",
