@@ -11,24 +11,6 @@ import passport = require('passport');
 // create express app
 const app = express();
 
-function verifyCallback(accessToken, refreshToken, profile, done) {
-	console.log('profile: ', profile);
-
-	//TODO: save the user details into the database
-	done(null, profile);
-}
-
-passport.use(
-	new GoogleStrategy(
-		{
-			clientID: process.env.CLIENT_ID,
-			clientSecret: process.env.CLIENT_SECRET,
-			callbackURL: '/auth/google/callback',
-		},
-		verifyCallback
-	)
-);
-
 // setup security headers
 app.use(helmet());
 

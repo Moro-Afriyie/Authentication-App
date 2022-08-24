@@ -2,8 +2,15 @@ import * as React from "react";
 import "./Login.scss";
 import logo from "../../assets/devchallenges.svg";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Login: React.FunctionComponent = () => {
+  const handleGoogleLogin = async () => {
+    const response = await axios.get("http://localhost:8080/auth/google");
+    // const response = await axios.get("http://localhost:8080/users");
+    console.log("response: ", response);
+  };
+
   return (
     <div className="login-container">
       <div className="login-box">
@@ -34,7 +41,7 @@ const Login: React.FunctionComponent = () => {
         <div className="login-box__socials">
           <p>or continue with these social profile</p>
           <div className="login-box__social-icons">
-            <div className="icon">
+            <div className="icon" onClick={handleGoogleLogin}>
               <i className="fa fa-google fa-lg" aria-hidden="true"></i>
             </div>
             <div className="icon">
