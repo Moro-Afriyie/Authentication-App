@@ -4,8 +4,8 @@ import logo from "../../assets/devchallenges.svg";
 import { Link } from "react-router-dom";
 
 const Login: React.FunctionComponent = () => {
-  const handleGoogleLogin = async () => {
-    window.open("http://localhost:8080/auth/google", "_self");
+  const handleSocialLogin = (account: string) => {
+    window.open(`http://localhost:8080/auth/${account}`, "_self");
   };
 
   return (
@@ -38,19 +38,19 @@ const Login: React.FunctionComponent = () => {
         <div className="login-box__socials">
           <p>or continue with these social profile</p>
           <div className="login-box__social-icons">
-            <div className="icon" onClick={handleGoogleLogin}>
+            <div className="icon" onClick={() => handleSocialLogin("google")}>
               <i className="fa fa-google fa-lg" aria-hidden="true"></i>
             </div>
-            <div className="icon">
+            <div className="icon" onClick={() => handleSocialLogin("facebook")}>
               <i
                 className="fa fa-facebook-official fa-lg"
                 aria-hidden="true"
               ></i>
             </div>
-            <div className="icon">
+            <div className="icon" onClick={() => handleSocialLogin("twitter")}>
               <i className="fa fa-twitter fa-lg" aria-hidden="true"></i>
             </div>
-            <div className="icon">
+            <div className="icon" onClick={() => handleSocialLogin("github")}>
               <i className="fa fa-github fa-lg" aria-hidden="true"></i>
             </div>
           </div>
