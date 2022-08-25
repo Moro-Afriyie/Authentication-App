@@ -2,7 +2,6 @@ import * as React from "react";
 import "./Login.scss";
 import logo from "../../assets/devchallenges.svg";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 const Login: React.FunctionComponent = () => {
   const handleGoogleLogin = async () => {

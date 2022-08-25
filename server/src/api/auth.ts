@@ -29,13 +29,13 @@ passport.use(
 	)
 );
 
-router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
+router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
 router.get(
 	'/google/callback',
 	passport.authenticate('google', {
-		failureRedirect: '/auth/failed',
-		successRedirect: '/users',
+		failureRedirect: '/auth/login/failed',
+		successRedirect: process.env.CLIENT_HOME_PAGE_URL,
 		session: false,
 	}),
 	(req, res) => {
@@ -47,8 +47,8 @@ router.get('/logout', (req, res) => {
 	res.send('logout');
 });
 
-router.get('/failed', (req, res) => {
-	throw new APIError('UNAUTHORIZED', HttpStatusCode.UNAUTHORISED, true, 'failed to login');
+router.get('/login/failed', (req, res) => {
+	throw new APIError('UNAUTHORIZED', HttpStatusCode.UNAUTHORISED, true, 'User Not Authenticated');
 });
 
 export default { path: '/auth', router };
