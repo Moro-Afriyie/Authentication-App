@@ -4,8 +4,17 @@ import logo from "../../assets/devchallenges.svg";
 import { Link } from "react-router-dom";
 
 const Login: React.FunctionComponent = () => {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
   const handleSocialLogin = (account: string) => {
     window.open(`http://localhost:8080/auth/${account}`, "_self");
+  };
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("email: ", email);
+    console.log("password: ", password);
   };
 
   return (
@@ -17,10 +26,18 @@ const Login: React.FunctionComponent = () => {
         <div className="login-box__heading">
           <p>Login</p>
         </div>
-        <form className="login-box__form">
+        <form className="login-box__form" onSubmit={(e) => handleLogin(e)}>
           <div className="login-box__form-control">
             <i className="fa fa-envelope fa-lg" aria-hidden="true"></i>
-            <input type="email" name="email" id="email" placeholder="Email" />
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={email}
+              placeholder="Email"
+              required
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div className="login-box__form-control">
             <i className="fa fa-lock fa-2x" aria-hidden="true"></i>
@@ -28,7 +45,10 @@ const Login: React.FunctionComponent = () => {
               type="password"
               name="password"
               id="password"
+              value={password}
               placeholder="Password"
+              required
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <button className="login-box__form-button" type="submit">
