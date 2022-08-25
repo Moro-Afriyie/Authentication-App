@@ -43,7 +43,16 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/login/failed', (req, res) => {
-	throw new APIError('UNAUTHORIZED', HttpStatusCode.UNAUTHORISED, true, 'User Not Authenticated');
+	throw new APIError(
+		'UNAUTHORIZED',
+		HttpStatusCode.UNAUTHORISED,
+		true,
+		'failed to authenticate user'
+	);
+});
+
+router.get('/login/success', (req, res) => {
+	console.log('login success');
 });
 
 export default { path: '/auth', router };
