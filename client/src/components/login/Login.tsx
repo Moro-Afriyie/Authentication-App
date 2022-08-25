@@ -6,9 +6,7 @@ import axios from "axios";
 
 const Login: React.FunctionComponent = () => {
   const handleGoogleLogin = async () => {
-    const response = await axios.get("http://localhost:8080/auth/google");
-    // const response = await axios.get("http://localhost:8080/users");
-    console.log("response: ", response);
+    window.open("http://localhost:8080/auth/google", "_self");
   };
 
   return (
