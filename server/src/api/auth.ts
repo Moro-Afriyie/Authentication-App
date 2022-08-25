@@ -6,11 +6,6 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
 const router: Router = Router();
 
-const config = {
-	CLIENT_ID: process.env.CLIENT_ID,
-	CLIENT_SECRET: process.env.CLIENT_SECRET,
-};
-
 function verifyCallback(accessToken, refreshToken, profile, done) {
 	console.log('profile: ', profile);
 
