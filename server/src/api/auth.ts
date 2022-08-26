@@ -10,10 +10,17 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 const router: Router = Router();
 
 function verifyCallback(accessToken: string, refreshToken: string, profile: any, done: any) {
-	console.log('profile: ', profile);
+	// console.log('profile: ', profile);
 
 	//TODO: save the user details into the database
 	done(null, profile);
+}
+
+function checkLoggedIn(req, res, next) {
+	const isLoggedIn = req.isAuthenticated();
+	if (!isLoggedIn) {
+		throw new APIError('UNAUTHORIZED', HttpStatusCode.UNAUTHORISED, true, 'Not Authorised');
+	}
 }
 
 passport.use(
@@ -26,16 +33,6 @@ passport.use(
 		verifyCallback
 	)
 );
-
-// save the session to the cookie
-passport.serializeUser((user, done) => {
-	done(null, user);
-});
-
-// read the session from the cookie
-passport.serializeUser((obj, done) => {
-	done(null, obj);
-});
 
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 

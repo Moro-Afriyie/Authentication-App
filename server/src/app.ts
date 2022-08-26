@@ -22,8 +22,9 @@ app.use(
 );
 
 // save the session to the cookie
-passport.serializeUser((user, done) => {
-	done(null, user);
+passport.serializeUser((user: any, done) => {
+	console.log('serialzed user: ', user);
+	done(null, user.id);
 });
 
 // read the session from the cookie
@@ -31,6 +32,7 @@ passport.deserializeUser((obj, done) => {
 	// 	User.findBy(id).then(user=>{
 	// done(null, user);
 	// 	})
+	console.log('user deserialize: ', obj);
 	done(null, obj);
 });
 
