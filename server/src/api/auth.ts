@@ -4,9 +4,12 @@ import { Router } from 'express';
 import passport = require('passport');
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
+// express-session = server side session
+// cookie-session = client side
+
 const router: Router = Router();
 
-function verifyCallback(accessToken, refreshToken, profile, done) {
+function verifyCallback(accessToken: string, refreshToken: string, profile: any, done: any) {
 	console.log('profile: ', profile);
 
 	//TODO: save the user details into the database
@@ -16,13 +19,23 @@ function verifyCallback(accessToken, refreshToken, profile, done) {
 passport.use(
 	new GoogleStrategy(
 		{
-			clientID: process.env.CLIENT_ID,
-			clientSecret: process.env.CLIENT_SECRET,
+			clientID: process.env.GOOGLE_CLIENT_ID,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 			callbackURL: '/auth/google/callback',
 		},
 		verifyCallback
 	)
 );
+
+// save the session to the cookie
+passport.serializeUser((user, done) => {
+	done(null, user);
+});
+
+// read the session from the cookie
+passport.serializeUser((obj, done) => {
+	done(null, obj);
+});
 
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
@@ -31,7 +44,7 @@ router.get(
 	passport.authenticate('google', {
 		failureRedirect: '/auth/login/failed',
 		successRedirect: process.env.CLIENT_HOME_PAGE_URL,
-		session: false,
+		session: true,
 	}),
 	(req, res) => {
 		console.log('google called us back');
