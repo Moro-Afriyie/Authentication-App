@@ -49,8 +49,13 @@ router.get(
 	}
 );
 
-router.get('/logout', (req: Request, res: Response) => {
-	res.send('logout');
+router.get('/logout', (req: Request, res: Response, next: NextFunction) => {
+	req.logout(function (err) {
+		if (err) {
+			return next(err);
+		}
+		res.redirect(process.env.CLIENT_HOME_PAGE_URL);
+	});
 });
 
 router.get('/login/failed', (req: Request, res: Response) => {
