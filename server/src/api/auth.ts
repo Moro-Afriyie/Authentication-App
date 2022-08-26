@@ -1,6 +1,6 @@
 import { HttpStatusCode } from './../@types';
 import { APIError } from './../error';
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import passport = require('passport');
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
@@ -16,11 +16,12 @@ function verifyCallback(accessToken: string, refreshToken: string, profile: any,
 	done(null, profile);
 }
 
-function checkLoggedIn(req, res, next) {
-	const isLoggedIn = req.isAuthenticated();
+function checkLoggedIn(req: Request, res: Response, next: NextFunction) {
+	const isLoggedIn = req.isAuthenticated() && req.user;
 	if (!isLoggedIn) {
 		throw new APIError('UNAUTHORIZED', HttpStatusCode.UNAUTHORISED, true, 'Not Authorised');
 	}
+	next();
 }
 
 passport.use(
@@ -43,16 +44,16 @@ router.get(
 		successRedirect: process.env.CLIENT_HOME_PAGE_URL,
 		session: true,
 	}),
-	(req, res) => {
+	(req: Request, res: Response) => {
 		console.log('google called us back');
 	}
 );
 
-router.get('/logout', (req, res) => {
+router.get('/logout', (req: Request, res: Response) => {
 	res.send('logout');
 });
 
-router.get('/login/failed', (req, res) => {
+router.get('/login/failed', (req: Request, res: Response) => {
 	throw new APIError(
 		'UNAUTHORIZED',
 		HttpStatusCode.UNAUTHORISED,
@@ -61,7 +62,7 @@ router.get('/login/failed', (req, res) => {
 	);
 });
 
-router.get('/login/success', (req, res) => {
+router.get('/login/success', (req: Request, res: Response) => {
 	console.log('login success');
 });
 
