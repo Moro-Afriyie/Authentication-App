@@ -7,43 +7,36 @@ import { createAPI } from './api';
 import { HttpStatusCode } from './@types';
 import passport = require('passport');
 import cookieSession = require('cookie-session');
+import cookieParser = require('cookie-parser');
 
 // create express app
 const app = express();
 
 // setup security headers
 app.use(helmet());
+
+// enable the "secure" flag on the sessionCookies object
+// app.use((req, res, next) => {
+// 	req['sessionCookies'].secure = true;
+// 	next();
+// });
+
 app.use(
 	cookieSession({
 		name: 'session',
-		maxAge: 24 * 60 * 60 * 1000,
+		maxAge: 24 * 60 * 60 * 1000, //24 hours
 		keys: [process.env.CLIENT_KEY_1, process.env.CLIENT_KEY_2],
+		httpOnly: false,
+		secure: false,
+		path: '/',
 	})
 );
-
-// save the session to the cookie
-passport.serializeUser((user: any, done) => {
-	console.log('serialzed user: ', user);
-	done(null, user.id);
-});
-
-// read the session from the cookie
-passport.deserializeUser((obj, done) => {
-	// 	User.findBy(id).then(user=>{
-	// done(null, user);
-	// 	})
-	console.log('user deserialize: ', obj);
-	done(null, obj);
-});
-
-// setup passport with sets up the passport session
-app.use(passport.initialize());
-app.use(passport.session());
 
 // setup cross-origin resource header sharing
 app.use(
 	cors({
-		origin: '*',
+		origin: 'http://localhost:3000',
+		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 		credentials: true,
 	})
 );
@@ -52,8 +45,20 @@ app.use(
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// parse cookies
+app.use(cookieParser());
+
+// setup passport with sets up the passport session
+app.use(passport.initialize());
+// deserialize cookie from the browser
+app.use(passport.session());
+
 // initialize api routes
 createAPI(app);
+
+app.get('/', (req: express.Request, res: express.Response) => {
+	res.json({ user: req.user });
+});
 
 // handle all routes which aren't part of the application
 app.use('*', (req: express.Request, _res) => {
