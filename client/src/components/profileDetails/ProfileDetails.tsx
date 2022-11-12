@@ -2,6 +2,7 @@ import * as React from "react";
 import "./ProfileDetails.scss";
 import avatar from "../../assets/avatar.jpg";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProfileDetailsProps {}
@@ -9,6 +10,24 @@ interface IProfileDetailsProps {}
 const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
   props
 ) => {
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/auth/login/success/",
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("response: ", response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchUser();
+  }, []);
+
   return (
     <div className="profile-details-box">
       <div className="profile-details-box__header">
