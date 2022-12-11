@@ -1,11 +1,14 @@
 import * as React from "react";
 import "./Login.scss";
 import logo from "../../assets/devchallenges.svg";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import queryString from "query-string";
 
 const Login: React.FunctionComponent = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const location = useLocation();
+  const { token } = queryString.parse(location.search);
 
   const handleSocialLogin = (account: string) => {
     window.open(`http://localhost:8080/auth/${account}`, "_self");
@@ -16,6 +19,12 @@ const Login: React.FunctionComponent = () => {
     console.log("email: ", email);
     console.log("password: ", password);
   };
+
+  React.useEffect(() => {
+    if (token) {
+      // make a request to the backend and get the user details + a new token
+    }
+  }, []);
 
   return (
     <div className="login-container">
