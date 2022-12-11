@@ -15,23 +15,6 @@ const app = express();
 // setup security headers
 app.use(helmet());
 
-// enable the "secure" flag on the sessionCookies object
-// app.use((req, res, next) => {
-// 	req['sessionCookies'].secure = true;
-// 	next();
-// });
-
-app.use(
-	cookieSession({
-		name: 'session',
-		maxAge: 24 * 60 * 60 * 1000, //24 hours
-		keys: [process.env.CLIENT_KEY_1, process.env.CLIENT_KEY_2],
-		httpOnly: false,
-		secure: false,
-		path: '/',
-	})
-);
-
 // setup cross-origin resource header sharing
 app.use(
 	cors({
@@ -45,13 +28,8 @@ app.use(
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// parse cookies
-app.use(cookieParser());
-
 // setup passport with sets up the passport session
 app.use(passport.initialize());
-// deserialize cookie from the browser
-app.use(passport.session());
 
 // initialize api routes
 createAPI(app);
