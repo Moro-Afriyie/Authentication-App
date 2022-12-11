@@ -37,23 +37,23 @@ passport.use(
 		// 		// or you could create a new account
 		// 	}
 		// });
-		console.log('users: ', userProfile);
+
 		const user = userProfile.filter((item) => item.id.toString() === jwt_payload.id.toString())[0];
-		console.log('user: ', user);
 		if (!user) return done(null, false);
 		return done(null, user);
 	})
 );
 
 // Generate an Access Token for the given User ID
-function generateAccessToken(user) {
-	const expiresIn = '1 hour';
+function generateAccessToken(user, expiresIn?: string) {
 	const secret = process.env.JWT_SECRET;
+	const expiration = expiresIn
+		? {
+				expiresIn,
+		  }
+		: {};
 
-	const token = Jwt.sign({ id: user.id.toString() }, secret, {
-		expiresIn: expiresIn,
-		subject: user.id.toString(),
-	});
+	const token = Jwt.sign({ id: user.id.toString() }, secret, expiration);
 
 	return token;
 }
@@ -102,8 +102,8 @@ router.get(
 		passReqToCallback: true,
 	}),
 	(req: Request, res: Response) => {
-		const token = generateAccessToken(req.user);
-		res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?token=${token}`);
+		const token = generateAccessToken(req.user, '1h'); // used to allow the user to login again and get a new token since it's exposed in the url
+		res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
 	}
 );
 
@@ -129,7 +129,8 @@ router.get(
 	'/login/success',
 	passport.authenticate('jwt', { session: false }),
 	(req: Request, res: Response) => {
-		res.json({ message: 'login success', success: true, user: userProfile });
+		const token = generateAccessToken(req.user);
+		res.json({ message: 'login success', success: true, user: req.user, token });
 	}
 );
 

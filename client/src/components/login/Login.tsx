@@ -8,7 +8,7 @@ const Login: React.FunctionComponent = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const location = useLocation();
-  const { token } = queryString.parse(location.search);
+  const { code } = queryString.parse(location.search);
 
   const handleSocialLogin = (account: string) => {
     window.open(`http://localhost:8080/auth/${account}`, "_self");
@@ -21,9 +21,9 @@ const Login: React.FunctionComponent = () => {
   };
 
   React.useEffect(() => {
-    if (token) {
+    if (code) {
       // make a request to the backend and get the user details + a new token
-      console.log("token: ", token);
+      console.log("token: ", code);
     }
   }, []);
 
