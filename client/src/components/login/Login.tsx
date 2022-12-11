@@ -23,6 +23,7 @@ const Login: React.FunctionComponent = () => {
   React.useEffect(() => {
     if (token) {
       // make a request to the backend and get the user details + a new token
+      console.log("token: ", token);
     }
   }, []);
 
