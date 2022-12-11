@@ -25,7 +25,6 @@ let userProfile: any = [];
 // use the jwt token
 passport.use(
 	new JwtStrategy(jwtOptions, function (jwt_payload, done) {
-		console.log('payload: ', jwt_payload);
 		// get the user from the database and verify
 		// User.findOne({ id: jwt_payload.sub }, function (err, user) {
 		// 	if (err) {
@@ -86,7 +85,7 @@ passport.use(
 );
 
 function checkLoggedIn(req: Request, res: Response, next: NextFunction) {
-	const isLoggedIn = req.isAuthenticated();
+	const isLoggedIn = req.isAuthenticated() && req.user;
 	if (!isLoggedIn) {
 		throw new APIError('UNAUTHORIZED', HttpStatusCode.UNAUTHORISED, true, 'Not Authorised');
 	}
