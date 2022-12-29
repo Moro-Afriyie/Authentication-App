@@ -102,7 +102,7 @@ router.get(
 		passReqToCallback: true,
 	}),
 	(req: Request, res: Response) => {
-		const token = generateAccessToken(req.user, '1h'); // used to allow the user to login again and get a new token since it's exposed in the url
+		const token = generateAccessToken(req.user, '5m'); // used to allow the user to login again and get a new token since it's exposed in the url
 		res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
 	}
 );
