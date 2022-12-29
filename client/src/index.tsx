@@ -10,7 +10,7 @@ ReactDOM.render(
   <React.StrictMode>
     <AuthProvider
       authType={"cookie"}
-      authName={"token"}
+      authName={"_auth"}
       cookieDomain={window.location.hostname}
       cookieSecure={
         process.env.NODE_ENV === "development"

@@ -10,24 +10,6 @@ interface IProfileDetailsProps {}
 const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
   props
 ) => {
-  const fetchUser = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/auth/login/success/",
-        {
-          withCredentials: true,
-        }
-      );
-      console.log("response: ", response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchUser();
-  }, []);
-
   return (
     <div className="profile-details-box">
       <div className="profile-details-box__header">

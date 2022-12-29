@@ -1,14 +1,36 @@
 import * as React from "react";
 import "./Login.scss";
 import logo from "../../assets/devchallenges.svg";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import queryString from "query-string";
+import axios from "axios";
+import { useSignIn } from "react-auth-kit";
 
 const Login: React.FunctionComponent = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const location = useLocation();
   const { code } = queryString.parse(location.search);
+  const signIn = useSignIn();
+  const navigate = useNavigate();
+
+  const fetchUser = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/auth/login/success/", {
+        headers: { Authorization: `Bearer ${code}` },
+        withCredentials: true,
+      });
+      signIn({
+        token: res.data.token,
+        expiresIn: 3600,
+        tokenType: "Bearer",
+        authState: res.data.user,
+      });
+      navigate("/profile/username");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSocialLogin = (account: string) => {
     window.open(`http://localhost:8080/auth/${account}`, "_self");
@@ -23,7 +45,7 @@ const Login: React.FunctionComponent = () => {
   React.useEffect(() => {
     if (code) {
       // make a request to the backend and get the user details + a new token
-      console.log("token: ", code);
+      fetchUser();
     }
   }, []);
 
