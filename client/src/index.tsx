@@ -4,12 +4,24 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "react-auth-kit";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <AuthProvider
+      authType={"cookie"}
+      authName={"token"}
+      cookieDomain={window.location.hostname}
+      cookieSecure={
+        process.env.NODE_ENV === "development"
+          ? window.location.protocol === "http:"
+          : window.location.protocol === "https:"
+      }
+    >
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </AuthProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
