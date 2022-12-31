@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
 import { APIError } from '../error';
+import passport = require('passport');
 
 const router: Router = Router();
 
@@ -13,19 +14,20 @@ router.get('/', async (req, res) => {
 	res.status(200).json({ success: true, data: users });
 });
 
-router.put('/', async (req, res) => {
-	const user = await UserRepository.findBy({ id: req.user.id });
+router.put('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+	const user = await UserRepository.findOneBy({ id: req.user.id });
 
 	if (!user) {
 		throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'User not found');
 	}
-	Object.assign(user, req.params);
+
+	Object.assign(user, req.body);
 	const updatedUser = await UserRepository.save(user);
-	res.json({ succes: true, user: updatedUser });
+	res.json({ message: 'details updated successfully', succes: true, user: updatedUser });
 });
 
-router.get('/delete', async (req, res) => {
-	await UserRepository.clear();
-});
+// router.get('/delete', async (req, res) => {
+// 	await UserRepository.clear();
+// });
 
 export default { path: '/users', router };
