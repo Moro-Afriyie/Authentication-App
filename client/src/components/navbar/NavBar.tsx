@@ -1,6 +1,6 @@
 import * as React from "react";
 import logo from "../../assets/devchallenges.svg";
-import avatar from "../../assets/avatar.jpg";
+import avatar from "../../assets/avatar.png";
 import "./NavBar.scss";
 import { useAuthUser } from "react-auth-kit";
 

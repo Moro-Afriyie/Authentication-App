@@ -1,13 +1,11 @@
 import * as React from "react";
 import "./ProfileDetails.scss";
-import avatar from "../../assets/avatar.jpg";
+import avatar from "../../assets/avatar.png";
 import { Link } from "react-router-dom";
 import { useAuthUser } from "react-auth-kit";
 
 const ProfileDetails: React.FunctionComponent = () => {
   const auth = useAuthUser();
-
-  console.log("user: ", auth());
 
   return (
     <div className="profile-details-box">

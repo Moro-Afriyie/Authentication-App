@@ -1,22 +1,18 @@
 import * as React from "react";
 import "./EditProfile.scss";
-import avatar from "../../assets/avatar.jpg";
+import avatar from "../../assets/avatar.png";
 import { Link } from "react-router-dom";
+import { useAuthUser } from "react-auth-kit";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface IEditProfileProps {}
+const EditProfile: React.FunctionComponent = () => {
+  const auth = useAuthUser();
 
-const EditProfile: React.FunctionComponent<IEditProfileProps> = (props) => {
   return (
     <div className="edit-profile-details-box">
       <Link className="back" to="/profile/username">
         <span className="material-icons">arrow_back_ios_new</span>
         <p>back</p>
       </Link>
-      {/* <div className="back">
-        <span className="material-icons">arrow_back_ios_new</span>
-        <p>back</p>
-      </div> */}
       <div className="edit-details-info">
         <div className="edit-details-info__header">
           <p className="bold">Change Info</p>
@@ -28,7 +24,7 @@ const EditProfile: React.FunctionComponent<IEditProfileProps> = (props) => {
               <label htmlFor="photo">
                 <div
                   className="photo-icon"
-                  style={{ backgroundImage: `url(${avatar})` }}
+                  style={{ backgroundImage: `url(${auth()?.photo || avatar})` }}
                 >
                   <div className="icon">
                     <span className="material-icons">photo_camera</span>
