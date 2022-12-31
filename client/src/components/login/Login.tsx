@@ -20,6 +20,7 @@ const Login: React.FunctionComponent = () => {
         headers: { Authorization: `Bearer ${code}` },
         withCredentials: true,
       });
+
       signIn({
         token: res.data.token,
         expiresIn: 3600,

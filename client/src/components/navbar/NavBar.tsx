@@ -2,12 +2,11 @@ import * as React from "react";
 import logo from "../../assets/devchallenges.svg";
 import avatar from "../../assets/avatar.jpg";
 import "./NavBar.scss";
+import { useAuthUser } from "react-auth-kit";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface INavBarProps {}
-
-const NavBar: React.FunctionComponent<INavBarProps> = (props) => {
+const NavBar: React.FunctionComponent = () => {
   const [menu, setMenu] = React.useState(false);
+  const auth = useAuthUser();
 
   const handleShowDropdownMenu = () => {
     setMenu((prev) => !prev);
@@ -23,9 +22,9 @@ const NavBar: React.FunctionComponent<INavBarProps> = (props) => {
           onClick={handleShowDropdownMenu}
         >
           <div className="avatar">
-            <img src={avatar} alt="profile picture" />
+            <img src={auth()?.photo || avatar} alt="profile picture" />
           </div>
-          <p>Xanthe Neal</p>
+          <p>{auth()?.name}</p>
           {menu ? (
             <i className="fa fa-caret-up" aria-hidden="true"></i>
           ) : (

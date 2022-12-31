@@ -2,14 +2,13 @@ import * as React from "react";
 import "./ProfileDetails.scss";
 import avatar from "../../assets/avatar.jpg";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { useAuthUser } from "react-auth-kit";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface IProfileDetailsProps {}
+const ProfileDetails: React.FunctionComponent = () => {
+  const auth = useAuthUser();
 
-const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
-  props
-) => {
+  console.log("user: ", auth());
+
   return (
     <div className="profile-details-box">
       <div className="profile-details-box__header">
@@ -25,32 +24,28 @@ const ProfileDetails: React.FunctionComponent<IProfileDetailsProps> = (
           <Link className="edit" to="/profile/settings">
             Edit
           </Link>
-          {/* <div className="edit">
-            Edit</div> */}
         </li>
         <li>
           <p className="left-text">photo</p>
           <div className="image">
-            <img src={avatar} alt="profile image" />
+            <img src={auth()?.photo || avatar} alt="profile image" />
           </div>
         </li>
         <li>
           <p className="left-text">Name</p>
-          <p className="right-text">Xanthe Neal</p>
+          <p className="right-text">{auth()?.name}</p>
         </li>
         <li>
           <p className="left-text">Bio</p>
-          <p className="right-text">
-            I am a software developer and a big fan of devchallenges...
-          </p>
+          <p className="right-text">{auth()?.bio}</p>
         </li>
         <li>
           <p className="left-text">phone</p>
-          <p className="right-text">908249274292</p>
+          <p className="right-text">{auth()?.phoneNumber}</p>
         </li>
         <li>
           <p className="left-text">Email</p>
-          <p className="right-text">xanthe.neal@gmail.com</p>
+          <p className="right-text">{auth()?.email}</p>
         </li>
         <li className="password">
           <p className="left-text">Password</p>
