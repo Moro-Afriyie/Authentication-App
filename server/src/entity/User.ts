@@ -20,8 +20,11 @@ export class User {
 	photo: string;
 
 	@Column()
+	phoneNumber: string;
+
+	@Column({ select: false })
 	password: string;
 
-	@Column()
+	@Column({ select: false })
 	provider: string;
 }
