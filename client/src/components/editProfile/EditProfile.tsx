@@ -4,22 +4,36 @@ import avatar from "../../assets/avatar.png";
 import { Link } from "react-router-dom";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import axios from "axios";
+import { useFormik } from "formik";
 
 const EditProfile: React.FunctionComponent = () => {
   const auth = useAuthUser();
   const authHeader = useAuthHeader();
-
-  const editProfileDetails = async () => {
-    const response = await axios.put(
-      "http://localhost:8080/users/",
-      {},
-      {
-        headers: { Authorization: authHeader() },
+  console.log(auth());
+  // TODO: handle password and images on the backend side
+  const formik = useFormik({
+    initialValues: {
+      name: auth()?.name,
+      bio: auth()?.bio,
+      email: auth()?.email,
+      phoneNumber: auth()?.phoneNumber,
+    },
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        const response = await axios.put(
+          "http://localhost:8080/users/",
+          values,
+          {
+            headers: { Authorization: authHeader() },
+          }
+        );
+        console.log("response: ", response.data.user);
+        // update the  authState with the new data from the server
+      } catch (error) {
+        console.log("error: ", error);
       }
-    );
-
-    console.log("response: ", response.data);
-  };
+    },
+  });
 
   return (
     <div className="edit-profile-details-box">
@@ -33,7 +47,7 @@ const EditProfile: React.FunctionComponent = () => {
           <p className="light">Changes will be reflected to every services</p>
         </div>
         <div className="edit-details-info__form">
-          <form>
+          <form onSubmit={formik.handleSubmit}>
             <div className="change-photo">
               <label htmlFor="photo">
                 <div
@@ -55,6 +69,8 @@ const EditProfile: React.FunctionComponent = () => {
                 name="name"
                 id="name"
                 placeholder="Enter your name..."
+                onChange={formik.handleChange}
+                value={formik.values.name}
               />
             </div>
             <div className="form-control">
@@ -63,15 +79,19 @@ const EditProfile: React.FunctionComponent = () => {
                 name="bio"
                 id="bio"
                 placeholder="Enter your bio..."
+                onChange={formik.handleChange}
+                value={formik.values.bio}
               ></textarea>
             </div>
             <div className="form-control">
               <label htmlFor="phone">Phone</label>
               <input
                 type="text"
-                name="phone"
-                id="phone"
+                name="phoneNumber"
+                id="phoneNumber"
                 placeholder="Enter your phone..."
+                onChange={formik.handleChange}
+                value={formik.values.phoneNumber}
               />
             </div>
             <div className="form-control">
@@ -80,7 +100,8 @@ const EditProfile: React.FunctionComponent = () => {
                 type="email"
                 id="email"
                 name="email"
-                placeholder="Enter your email..."
+                value={formik.values.email}
+                readOnly
               />
             </div>
             <div className="form-control">
