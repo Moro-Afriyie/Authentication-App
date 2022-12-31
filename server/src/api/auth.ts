@@ -5,6 +5,7 @@ import passport = require('passport');
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import * as Jwt from 'jsonwebtoken';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { UserRepository } from './users';
 
 const jwtOptions = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -26,19 +27,8 @@ let userProfile: any = [];
 passport.use(
 	new JwtStrategy(jwtOptions, function (jwt_payload, done) {
 		// get the user from the database and verify
-		// User.findOne({ id: jwt_payload.sub }, function (err, user) {
-		// 	if (err) {
-		// 		return done(err, false);
-		// 	}
-		// 	if (user) {
-		// 		return done(null, user);
-		// 	} else {
-		// 		return done(null, false);
-		// 		// or you could create a new account
-		// 	}
-		// });
+		const user = UserRepository.findOneBy({ id: jwt_payload.sub });
 
-		const user = userProfile.filter((item) => item.id.toString() === jwt_payload.id.toString())[0];
 		if (!user) return done(null, false);
 		return done(null, user);
 	})
@@ -46,6 +36,7 @@ passport.use(
 
 // Generate an Access Token for the given User ID
 function generateAccessToken(user, expiresIn?: string) {
+	console.log('user from jwt: ', user);
 	const secret = process.env.JWT_SECRET;
 	const expiration = expiresIn
 		? {
@@ -53,7 +44,7 @@ function generateAccessToken(user, expiresIn?: string) {
 		  }
 		: {};
 
-	const token = Jwt.sign({ id: user.id.toString() }, secret, expiration);
+	const token = Jwt.sign({ id: user.id }, secret, expiration);
 
 	return token;
 }
@@ -66,20 +57,22 @@ passport.use(
 			callbackURL: '/auth/google/callback',
 			passReqToCallback: true,
 		},
-		(req, accessToken, refreshToken, profile, cb) => {
-			let defaultUser = userProfile.filter((item) => item.googleId === profile.id)[0];
-			if (!defaultUser) {
-				defaultUser = {
-					fullName: `${profile.name.givenName} ${profile.name.familyName}`,
-					email: profile.emails[0].value,
-					picture: profile.photos[0].value,
-					googleId: profile.id,
-					id: profile.id,
-				};
-			}
-			userProfile.push(defaultUser);
+		async (req, accessToken, refreshToken, profile, cb) => {
+			let user = await UserRepository.findOneBy({ email: profile.emails[0].value });
 
-			return cb(null, defaultUser);
+			console.log('user: ', user);
+			if (!user) {
+				user = await UserRepository.save({
+					name: `${profile.name.givenName} ${profile.name.familyName}`,
+					bio: '',
+					email: profile.emails[0].value,
+					photo: profile.photos[0].value,
+					password: '',
+				});
+				console.log('created user: ', user);
+			}
+
+			return cb(null, user);
 		}
 	)
 );
