@@ -12,7 +12,7 @@ export class User {
 	bio: string;
 
 	@Column({
-		// unique: true,
+		unique: true,
 	})
 	email: string;
 
@@ -21,4 +21,7 @@ export class User {
 
 	@Column()
 	password: string;
+
+	@Column()
+	provider: string;
 }

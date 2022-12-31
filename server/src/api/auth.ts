@@ -25,9 +25,9 @@ let userProfile: any = [];
 
 // use the jwt token
 passport.use(
-	new JwtStrategy(jwtOptions, function (jwt_payload, done) {
+	new JwtStrategy(jwtOptions, async function (jwt_payload, done) {
 		// get the user from the database and verify
-		const user = UserRepository.findOneBy({ id: jwt_payload.sub });
+		const user = await UserRepository.findOneBy({ id: jwt_payload.sub });
 
 		if (!user) return done(null, false);
 		return done(null, user);
@@ -36,7 +36,6 @@ passport.use(
 
 // Generate an Access Token for the given User ID
 function generateAccessToken(user, expiresIn?: string) {
-	console.log('user from jwt: ', user);
 	const secret = process.env.JWT_SECRET;
 	const expiration = expiresIn
 		? {
@@ -58,6 +57,7 @@ passport.use(
 			passReqToCallback: true,
 		},
 		async (req, accessToken, refreshToken, profile, cb) => {
+			console.log('user profile: ', profile);
 			let user = await UserRepository.findOneBy({ email: profile.emails[0].value });
 
 			console.log('user: ', user);
@@ -68,8 +68,9 @@ passport.use(
 					email: profile.emails[0].value,
 					photo: profile.photos[0].value,
 					password: '',
+					provider: 'google',
 				});
-				console.log('created user: ', user);
+				// console.log('created user: ', user);
 			}
 
 			return cb(null, user);
@@ -122,6 +123,7 @@ router.get(
 	'/login/success',
 	passport.authenticate('jwt', { session: false }),
 	(req: Request, res: Response) => {
+		console.log('request user: ', req.user);
 		const token = generateAccessToken(req.user);
 		res.json({ message: 'login success', success: true, user: req.user, token });
 	}
