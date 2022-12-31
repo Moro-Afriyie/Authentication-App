@@ -6,6 +6,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import * as Jwt from 'jsonwebtoken';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { UserRepository } from './users';
+import { checkIsLoggedIn } from '../middlewares/jwtAuth';
 
 const jwtOptions = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -13,15 +14,6 @@ const jwtOptions = {
 };
 
 const router: Router = Router();
-
-function verifyCallback(accessToken: string, refreshToken: string, profile: any, done: any) {
-	// console.log('profile: ', profile);
-
-	//TODO: save the user details into the database
-	return done(null, profile);
-}
-
-let userProfile: any = [];
 
 // use the jwt token
 passport.use(
@@ -76,14 +68,6 @@ passport.use(
 	)
 );
 
-function checkLoggedIn(req: Request, res: Response, next: NextFunction) {
-	const isLoggedIn = req.isAuthenticated() && req.user;
-	if (!isLoggedIn) {
-		throw new APIError('UNAUTHORIZED', HttpStatusCode.UNAUTHORISED, true, 'Not Authorised');
-	}
-	next();
-}
-
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
 router.get(
@@ -117,13 +101,9 @@ router.get('/login/failed', (req: Request, res: Response) => {
 	);
 });
 
-router.get(
-	'/login/success',
-	passport.authenticate('jwt', { session: false }),
-	(req: Request, res: Response) => {
-		const token = generateAccessToken(req.user);
-		res.json({ message: 'login success', success: true, user: req.user, token });
-	}
-);
+router.get('/login/success', checkIsLoggedIn, (req: Request, res: Response) => {
+	const token = generateAccessToken(req.user);
+	res.json({ message: 'login success', success: true, user: req.user, token });
+});
 
 export default { path: '/auth', router };

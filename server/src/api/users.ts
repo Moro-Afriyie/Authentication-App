@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
 import { APIError } from '../error';
-import passport = require('passport');
+import { checkIsLoggedIn } from '../middlewares/jwtAuth';
 
 const router: Router = Router();
 
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 	res.status(200).json({ success: true, data: users });
 });
 
-router.put('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put('/', checkIsLoggedIn, async (req, res) => {
 	const user = await UserRepository.findOneBy({ id: req.user.id });
 
 	if (!user) {
