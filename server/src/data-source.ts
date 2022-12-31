@@ -18,3 +18,9 @@ export const AppDataSource = new DataSource({
 	migrationsTableName: 'migrations',
 	subscribers: [],
 });
+/**
+ * create migration
+ 1. npx typeorm-ts-node-esm migration:generate ./src/migrations/update-user-table  -d ./src/data-source.ts
+ run migration
+ 2. npx typeorm-ts-node-commonjs migration:run  -d ./src/data-source.ts
+ */
