@@ -2,10 +2,24 @@ import * as React from "react";
 import "./EditProfile.scss";
 import avatar from "../../assets/avatar.png";
 import { Link } from "react-router-dom";
-import { useAuthUser } from "react-auth-kit";
+import { useAuthHeader, useAuthUser } from "react-auth-kit";
+import axios from "axios";
 
 const EditProfile: React.FunctionComponent = () => {
   const auth = useAuthUser();
+  const authHeader = useAuthHeader();
+
+  const editProfileDetails = async () => {
+    const response = await axios.put(
+      "http://localhost:8080/users/",
+      {},
+      {
+        headers: { Authorization: authHeader() },
+      }
+    );
+
+    console.log("response: ", response.data);
+  };
 
   return (
     <div className="edit-profile-details-box">
