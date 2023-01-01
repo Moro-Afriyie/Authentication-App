@@ -15,6 +15,7 @@ router.get('/', async (req, res) => {
 });
 
 router.put('/', checkIsLoggedIn, async (req, res) => {
+	console.log('req.user: ', req.user);
 	const user = await UserRepository.findOneBy({ id: req.user.id });
 
 	if (!user) {

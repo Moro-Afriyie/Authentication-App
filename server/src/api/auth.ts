@@ -23,6 +23,8 @@ passport.use(
 		// get the user from the database and verify
 		const user = await UserRepository.findOneBy({ id: jwt_payload.sub });
 
+		console.log('user from passport: ', user);
+
 		if (!user) return done(null, false);
 		return done(null, user);
 	})
@@ -147,7 +149,7 @@ router.post('/register', async (req: Request, res: Response) => {
 		delete user.password;
 
 		const token = generateAccessToken(user);
-		res.json({
+		res.status(201).json({
 			message: 'account created succesfully',
 			success: true,
 			user,
@@ -156,4 +158,47 @@ router.post('/register', async (req: Request, res: Response) => {
 	});
 });
 
+router.post('/login', async (req: Request, res: Response) => {
+	const { email, password } = req.body;
+	let user = await UserRepository.findOneBy({ email });
+
+	if (!user) {
+		res.status(HttpStatusCode.NOT_FOUND);
+		return res.json({
+			date: Date.now(),
+			message: 'account not found. please sign up',
+			error: true,
+		});
+	}
+
+	if (user.provider) {
+		res.status(HttpStatusCode.BAD_REQUEST);
+		return res.json({
+			date: Date.now(),
+			message: `user registered using ${user.provider} .please login to continue`,
+			error: true,
+		});
+	}
+
+	const isValidPassword = bcrypt.compareSync(password, user.password);
+	if (!isValidPassword) {
+		res.status(HttpStatusCode.BAD_REQUEST);
+		return res.json({
+			date: Date.now(),
+			message: `invalid email or password`,
+			error: true,
+		});
+	}
+
+	delete user.provider;
+	delete user.password;
+	const token = generateAccessToken(user);
+	console.log('req user: ', req.user);
+	res.status(201).json({
+		message: 'loggin success',
+		success: true,
+		user,
+		token: token,
+	});
+});
 export default { path: '/auth', router };
