@@ -7,6 +7,8 @@ import * as Jwt from 'jsonwebtoken';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { UserRepository } from './users';
 import { checkIsLoggedIn } from '../middlewares/jwtAuth';
+import * as bcrypt from 'bcrypt';
+import _ from 'lodash';
 
 const jwtOptions = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -92,7 +94,7 @@ router.get('/logout', (req: Request, res: Response, next: NextFunction) => {
 	});
 });
 
-router.get('/login/failed', (req: Request, res: Response) => {
+router.post('/login/failed', (req: Request, res: Response) => {
 	throw new APIError(
 		'UNAUTHORIZED',
 		HttpStatusCode.UNAUTHORISED,
@@ -104,6 +106,54 @@ router.get('/login/failed', (req: Request, res: Response) => {
 router.get('/login/success', checkIsLoggedIn, (req: Request, res: Response) => {
 	const token = generateAccessToken(req.user);
 	res.json({ message: 'login success', success: true, user: req.user, token });
+});
+
+router.post('/register', async (req: Request, res: Response) => {
+	const { email, password, name } = req.body;
+
+	let user = await UserRepository.findOneBy({ email });
+
+	if (user) {
+		res.status(HttpStatusCode.BAD_REQUEST);
+		return res.json({
+			date: Date.now(),
+			message: `user already exitsts ${
+				user.provider ? `and registered using ${user.provider}` : ''
+			}.please login to continue`,
+			error: true,
+		});
+	}
+
+	bcrypt.hash(password, 10, async (err, hashedPassword) => {
+		if (err) {
+			res.status(HttpStatusCode.INTERNAL_SERVER);
+			return res.json({
+				date: Date.now(),
+				message: err.message,
+				error: true,
+			});
+		}
+
+		user = await UserRepository.save({
+			name,
+			bio: '',
+			email,
+			photo: '',
+			password: hashedPassword,
+			provider: '',
+			phoneNumber: '',
+		});
+		delete user.provider;
+		delete user.password;
+
+		const token = generateAccessToken(user);
+		res.json({
+			message: 'account created succesfully',
+			success: true,
+			user,
+			token: token,
+		});
+	});
 });
 
 export default { path: '/auth', router };
