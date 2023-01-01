@@ -27,8 +27,8 @@ router.put('/', checkIsLoggedIn, async (req, res) => {
 	res.json({ message: 'details updated successfully', succes: true, user: updatedUser });
 });
 
-// router.get('/delete', async (req, res) => {
-// 	await UserRepository.clear();
-// });
+router.get('/delete', async (req, res) => {
+	await UserRepository.clear();
+});
 
 export default { path: '/users', router };

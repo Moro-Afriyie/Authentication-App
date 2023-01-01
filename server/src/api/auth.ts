@@ -20,10 +20,9 @@ const router: Router = Router();
 // use the jwt token
 passport.use(
 	new JwtStrategy(jwtOptions, async function (jwt_payload, done) {
+		console.log('jwt payload: ', jwt_payload);
 		// get the user from the database and verify
 		const user = await UserRepository.findOneBy({ id: jwt_payload.sub });
-
-		console.log('user from passport: ', user);
 
 		if (!user) return done(null, false);
 		return done(null, user);
@@ -193,7 +192,7 @@ router.post('/login', async (req: Request, res: Response) => {
 	delete user.provider;
 	delete user.password;
 	const token = generateAccessToken(user);
-	console.log('req user: ', req.user);
+
 	res.status(201).json({
 		message: 'loggin success',
 		success: true,
