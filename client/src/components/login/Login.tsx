@@ -5,14 +5,39 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import queryString from "query-string";
 import axios from "axios";
 import { useSignIn } from "react-auth-kit";
+import { useFormik } from "formik";
 
 const Login: React.FunctionComponent = () => {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
   const location = useLocation();
   const { code } = queryString.parse(location.search);
   const signIn = useSignIn();
   const navigate = useNavigate();
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit: async (values, { setSubmitting }) => {
+      console.log("values: ", values);
+      try {
+        const res = await axios.post(
+          "http://localhost:8080/auth/login/",
+          values
+        );
+        console.log("response: ", res.data.user);
+        signIn({
+          token: res.data.token,
+          expiresIn: 3600,
+          tokenType: "Bearer",
+          authState: res.data.user,
+        });
+        navigate("/profile/username");
+      } catch (error) {
+        console.log("error: ", error);
+      }
+    },
+  });
 
   const fetchUser = async () => {
     try {
@@ -37,12 +62,6 @@ const Login: React.FunctionComponent = () => {
     window.open(`http://localhost:8080/auth/${account}`, "_self");
   };
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("email: ", email);
-    console.log("password: ", password);
-  };
-
   React.useEffect(() => {
     if (code) {
       // make a request to the backend and get the user details + a new token
@@ -59,17 +78,17 @@ const Login: React.FunctionComponent = () => {
         <div className="login-box__heading">
           <p>Login</p>
         </div>
-        <form className="login-box__form" onSubmit={(e) => handleLogin(e)}>
+        <form className="login-box__form" onSubmit={formik.handleSubmit}>
           <div className="login-box__form-control">
             <i className="fa fa-envelope fa-lg" aria-hidden="true"></i>
             <input
               type="email"
               name="email"
               id="email"
-              value={email}
+              value={formik.values.email}
               placeholder="Email"
               required
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={formik.handleChange}
             />
           </div>
           <div className="login-box__form-control">
@@ -78,10 +97,10 @@ const Login: React.FunctionComponent = () => {
               type="password"
               name="password"
               id="password"
-              value={password}
+              value={formik.values.password}
               placeholder="Password"
               required
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={formik.handleChange}
             />
           </div>
           <button className="login-box__form-button" type="submit">
