@@ -21,11 +21,8 @@ const router: Router = Router();
 // use the jwt token
 passport.use(
 	new JwtStrategy(jwtOptions, async function (jwt_payload, done) {
-		console.log('jwt payload: ', jwt_payload);
 		// get the user from the database and verify
 		const user = await UserRepository.findOneBy({ id: jwt_payload.id });
-
-		console.log('user from jwt payload: ', user);
 
 		if (!user) return done(null, false);
 		return done(null, user);
