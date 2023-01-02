@@ -125,8 +125,8 @@ passport.use(
 				const user = await UserRepository.findOneBy({ email: email });
 				if (!user) return done(null, false);
 				const isValidPassword = bcrypt.compareSync(password, user.password);
-				if (!isValidPassword) return done(null, false); // if passwords match return user
-				return done(null, user);
+				if (!isValidPassword) return done(null, false);
+				return done(null, user); // if passwords match return user
 			} catch (error) {
 				console.log(error);
 				return done(error, false);
@@ -232,47 +232,69 @@ router.post(
 	}
 );
 
-router.post('/login', async (req: Request, res: Response) => {
-	const { email, password } = req.body;
-	let user = await UserRepository.findOneBy({ email });
+// router.post('/login', async (req: Request, res: Response) => {
+// 	const { email, password } = req.body;
+// 	let user = await UserRepository.findOneBy({ email });
 
-	if (!user) {
-		res.status(HttpStatusCode.NOT_FOUND);
-		return res.json({
-			date: Date.now(),
-			message: 'account not found. please sign up',
-			error: true,
+// 	if (!user) {
+// 		res.status(HttpStatusCode.NOT_FOUND);
+// 		return res.json({
+// 			date: Date.now(),
+// 			message: 'account not found. please sign up',
+// 			error: true,
+// 		});
+// 	}
+
+// 	if (user.provider) {
+// 		res.status(HttpStatusCode.BAD_REQUEST);
+// 		return res.json({
+// 			date: Date.now(),
+// 			message: `user registered using ${user.provider} .please login to continue`,
+// 			error: true,
+// 		});
+// 	}
+
+// 	const isValidPassword = bcrypt.compareSync(password, user.password);
+// 	if (!isValidPassword) {
+// 		res.status(HttpStatusCode.BAD_REQUEST);
+// 		return res.json({
+// 			date: Date.now(),
+// 			message: `invalid email or password`,
+// 			error: true,
+// 		});
+// 	}
+
+// 	delete user.provider;
+// 	delete user.password;
+// 	const token = generateAccessToken(user);
+
+// 	res.status(201).json({
+// 		message: 'loggin success',
+// 		success: true,
+// 		user,
+// 		token: token,
+// 	});
+// });
+
+router.post('/login', function (req, res, next) {
+	passport.authenticate('local-login', { session: false }, (err, user, info) => {
+		if (err || !user) {
+			return res.status(400).json({
+				message: 'Something is not right',
+				user: user,
+			});
+		}
+		req.login(user, { session: false }, (err) => {
+			if (err) {
+				res.send(err);
+			}
+
+			// generate a signed son web token with the contents of user object and return it in the response
+			// const token = jwt.sign(user, 'your_jwt_secret');
+			// return res.json({ user, token });
+			res.send('user is logged in');
 		});
-	}
-
-	if (user.provider) {
-		res.status(HttpStatusCode.BAD_REQUEST);
-		return res.json({
-			date: Date.now(),
-			message: `user registered using ${user.provider} .please login to continue`,
-			error: true,
-		});
-	}
-
-	const isValidPassword = bcrypt.compareSync(password, user.password);
-	if (!isValidPassword) {
-		res.status(HttpStatusCode.BAD_REQUEST);
-		return res.json({
-			date: Date.now(),
-			message: `invalid email or password`,
-			error: true,
-		});
-	}
-
-	delete user.provider;
-	delete user.password;
-	const token = generateAccessToken(user);
-
-	res.status(201).json({
-		message: 'loggin success',
-		success: true,
-		user,
-		token: token,
-	});
+	})(req, res);
 });
+
 export default { path: '/auth', router };
