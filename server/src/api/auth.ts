@@ -158,6 +158,7 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req: Request, res: Response) => {
+	console.log('req body: ', req.body);
 	const { email, password } = req.body;
 	let user = await UserRepository.findOneBy({ email });
 
