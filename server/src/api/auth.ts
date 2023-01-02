@@ -5,6 +5,7 @@ import passport = require('passport');
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import * as Jwt from 'jsonwebtoken';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { Strategy as LocalStrategy } from 'passport-local';
 import { UserRepository } from './users';
 import { checkIsLoggedIn } from '../middlewares/jwtAuth';
 import * as bcrypt from 'bcrypt';
@@ -71,6 +72,68 @@ passport.use(
 	)
 );
 
+passport.use(
+	'local-signup',
+	new LocalStrategy(
+		{
+			usernameField: 'email',
+			passwordField: 'password',
+			passReqToCallback: true,
+		},
+		async (req, email, password, done) => {
+			try {
+				// check if user exists
+				const userExists = await UserRepository.findOneBy({ email: email });
+				if (userExists) {
+					return done(null, false);
+				} // Create a new user with the user data provided
+				bcrypt.hash(password, 10, async (err, hashedPassword) => {
+					if (err) {
+						done(err, false);
+					}
+
+					const user = await UserRepository.save({
+						name: req.body.name,
+						bio: '',
+						email,
+						photo: '',
+						password: hashedPassword,
+						provider: '',
+						phoneNumber: '',
+					});
+					delete user.provider;
+					delete user.password;
+
+					return done(null, user);
+				});
+			} catch (error) {
+				done(error);
+			}
+		}
+	)
+);
+
+passport.use(
+	'local-login',
+	new LocalStrategy(
+		{
+			usernameField: 'email',
+			passwordField: 'password',
+		},
+		async (email, password, done) => {
+			try {
+				const user = await UserRepository.findOneBy({ email: email });
+				if (!user) return done(null, false);
+				const isValidPassword = bcrypt.compareSync(password, user.password);
+				if (!isValidPassword) return done(null, false); // if passwords match return user
+				return done(null, user);
+			} catch (error) {
+				console.log(error);
+				return done(error, false);
+			}
+		}
+	)
+);
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
 router.get(
@@ -109,7 +172,18 @@ router.get('/login/success', checkIsLoggedIn, (req: Request, res: Response) => {
 	res.json({ message: 'login success', success: true, user: req.user, token });
 });
 
-router.post('/register', async (req: Request, res: Response) => {
+router.post(
+	'/register',
+	passport.authenticate('local-signup', { session: false }),
+	async (req: Request, res: Response) => {
+		const token = generateAccessToken(req.user);
+		res.status(201).json({
+			message: 'account created succesfully',
+			success: true,
+			user: req.user,
+			token: token,
+		});
+		/*
 	const { email, password, name } = req.body;
 
 	let user = await UserRepository.findOneBy({ email });
@@ -154,8 +228,9 @@ router.post('/register', async (req: Request, res: Response) => {
 			user,
 			token: token,
 		});
-	});
-});
+	});*/
+	}
+);
 
 router.post('/login', async (req: Request, res: Response) => {
 	const { email, password } = req.body;
