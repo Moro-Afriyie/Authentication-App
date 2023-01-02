@@ -20,9 +20,8 @@ const Login: React.FunctionComponent = () => {
       password: "",
     },
     onSubmit: async (values, { setSubmitting }) => {
-      console.log("values: ", values);
       try {
-        const res = await axios.post(`${BASE_URL}`, values);
+        const res = await axios.post(`${BASE_URL}/auth/login`, values);
         console.log("response: ", res.data.user);
         signIn({
           token: res.data.token,

@@ -3,10 +3,12 @@ import logo from "../../assets/devchallenges.svg";
 import avatar from "../../assets/avatar.png";
 import "./NavBar.scss";
 import { useAuthUser } from "react-auth-kit";
+import { useSignOut } from "react-auth-kit";
 
 const NavBar: React.FunctionComponent = () => {
   const [menu, setMenu] = React.useState(false);
   const auth = useAuthUser();
+  const signOut = useSignOut();
 
   const handleShowDropdownMenu = () => {
     setMenu((prev) => !prev);
@@ -43,7 +45,7 @@ const NavBar: React.FunctionComponent = () => {
                 <p>Group Chat</p>
               </li>
               <hr />
-              <li className="link-item logout">
+              <li className="link-item logout" onClick={() => signOut()}>
                 <span className="material-icons">exit_to_app</span>
                 <p>Logout</p>
               </li>

@@ -19,7 +19,7 @@ const SignUp: React.FunctionComponent = () => {
     },
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const res = await axios.post(`${BASE_URL}`, values);
+        const res = await axios.post(`${BASE_URL}/auth/register/`, values);
         signIn({
           token: res.data.token,
           expiresIn: 3600,
