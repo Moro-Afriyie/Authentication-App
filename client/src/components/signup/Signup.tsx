@@ -2,6 +2,7 @@ import * as React from "react";
 import "./SignUp.scss";
 import logo from "../../assets/devchallenges.svg";
 import { Link } from "react-router-dom";
+import { BASE_URL } from "../../utils/config";
 
 const SignUp: React.FunctionComponent = () => {
   const [email, setEmail] = React.useState("");
@@ -9,7 +10,7 @@ const SignUp: React.FunctionComponent = () => {
   const [userName, setUserName] = React.useState("");
 
   const handleSocialLogin = (account: string) => {
-    window.open(`http://localhost:8080/auth/${account}`, "_self");
+    window.open(`${BASE_URL}/auth/${account}`, "_self");
   };
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {

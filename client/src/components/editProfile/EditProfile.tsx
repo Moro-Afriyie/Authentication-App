@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import axios from "axios";
 import { useFormik } from "formik";
+import { BASE_URL } from "../../utils/config";
 
 const EditProfile: React.FunctionComponent = () => {
   const auth = useAuthUser();
@@ -20,13 +21,9 @@ const EditProfile: React.FunctionComponent = () => {
     },
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const response = await axios.put(
-          "http://localhost:8080/users/",
-          values,
-          {
-            headers: { Authorization: authHeader() },
-          }
-        );
+        const response = await axios.put(`${BASE_URL}`, values, {
+          headers: { Authorization: authHeader() },
+        });
         console.log("response: ", response.data.user);
         // update the  authState with the new data from the server
       } catch (error) {

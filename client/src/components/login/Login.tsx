@@ -6,6 +6,7 @@ import queryString from "query-string";
 import axios from "axios";
 import { useSignIn } from "react-auth-kit";
 import { useFormik } from "formik";
+import { BASE_URL } from "../../utils/config";
 
 const Login: React.FunctionComponent = () => {
   const location = useLocation();
@@ -21,10 +22,7 @@ const Login: React.FunctionComponent = () => {
     onSubmit: async (values, { setSubmitting }) => {
       console.log("values: ", values);
       try {
-        const res = await axios.post(
-          "http://localhost:8080/auth/login/",
-          values
-        );
+        const res = await axios.post(`${BASE_URL}`, values);
         console.log("response: ", res.data.user);
         signIn({
           token: res.data.token,
@@ -41,7 +39,7 @@ const Login: React.FunctionComponent = () => {
 
   const fetchUser = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/auth/login/success/", {
+      const res = await axios.get(`${BASE_URL}/auth/login/success/`, {
         headers: { Authorization: `Bearer ${code}` },
         withCredentials: true,
       });
@@ -59,7 +57,7 @@ const Login: React.FunctionComponent = () => {
   };
 
   const handleSocialLogin = (account: string) => {
-    window.open(`http://localhost:8080/auth/${account}`, "_self");
+    window.open(`${BASE_URL}/auth/${account}`, "_self");
   };
 
   React.useEffect(() => {
