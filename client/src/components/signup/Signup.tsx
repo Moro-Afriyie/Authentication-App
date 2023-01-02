@@ -1,23 +1,40 @@
 import * as React from "react";
 import "./SignUp.scss";
 import logo from "../../assets/devchallenges.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../utils/config";
+import { useFormik } from "formik";
+import axios from "axios";
+import { useSignIn } from "react-auth-kit";
 
 const SignUp: React.FunctionComponent = () => {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [userName, setUserName] = React.useState("");
+  const signIn = useSignIn();
+  const navigate = useNavigate();
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        const res = await axios.post(`${BASE_URL}`, values);
+        signIn({
+          token: res.data.token,
+          expiresIn: 3600,
+          tokenType: "Bearer",
+          authState: res.data.user,
+        });
+        navigate("/profile/username");
+      } catch (error) {
+        console.log("error: ", error);
+      }
+    },
+  });
 
   const handleSocialLogin = (account: string) => {
     window.open(`${BASE_URL}/auth/${account}`, "_self");
-  };
-
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("email: ", email);
-    console.log("password: ", password);
-    console.log("userName: ", userName);
   };
 
   return (
@@ -29,17 +46,17 @@ const SignUp: React.FunctionComponent = () => {
         <div className="login-box__heading">
           <p>Sign Up</p>
         </div>
-        <form className="login-box__form" onSubmit={(e) => handleLogin(e)}>
+        <form className="login-box__form" onSubmit={formik.handleSubmit}>
           <div className="login-box__form-control">
             <i className="fa fa-user-circle-o fa-lg" aria-hidden="true"></i>
             <input
               type="text"
-              name="userName"
-              id="userName"
-              value={userName}
+              name="name"
+              id="name"
+              value={formik.values.name}
               placeholder="User Name"
               required
-              onChange={(e) => setUserName(e.target.value)}
+              onChange={formik.handleChange}
             />
           </div>
           <div className="login-box__form-control">
@@ -50,8 +67,8 @@ const SignUp: React.FunctionComponent = () => {
               id="email"
               placeholder="Email"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formik.values.email}
+              onChange={formik.handleChange}
             />
           </div>
           <div className="login-box__form-control">
@@ -60,10 +77,10 @@ const SignUp: React.FunctionComponent = () => {
               type="password"
               name="password"
               id="password"
-              value={password}
+              value={formik.values.password}
               required
               placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={formik.handleChange}
             />
           </div>
           <button className="login-box__form-button" type="submit">
