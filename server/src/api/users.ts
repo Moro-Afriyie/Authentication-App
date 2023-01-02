@@ -15,7 +15,6 @@ router.get('/', async (req, res) => {
 });
 
 router.put('/', checkIsLoggedIn, async (req, res) => {
-	console.log('req.user: ', req.user);
 	const user = await UserRepository.findOneBy({ id: req.user.id });
 
 	if (!user) {
@@ -25,6 +24,10 @@ router.put('/', checkIsLoggedIn, async (req, res) => {
 	Object.assign(user, req.body);
 	const updatedUser = await UserRepository.save(user);
 	res.json({ message: 'details updated successfully', succes: true, user: updatedUser });
+});
+
+router.get('/hello', checkIsLoggedIn, (req, res) => {
+	res.send(req.user);
 });
 
 router.get('/delete', async (req, res) => {

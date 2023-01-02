@@ -23,7 +23,9 @@ passport.use(
 	new JwtStrategy(jwtOptions, async function (jwt_payload, done) {
 		console.log('jwt payload: ', jwt_payload);
 		// get the user from the database and verify
-		const user = await UserRepository.findOneBy({ id: jwt_payload.sub });
+		const user = await UserRepository.findOneBy({ id: jwt_payload.id });
+
+		console.log('user from jwt payload: ', user);
 
 		if (!user) return done(null, false);
 		return done(null, user);
@@ -72,68 +74,6 @@ passport.use(
 	)
 );
 
-passport.use(
-	'local-signup',
-	new LocalStrategy(
-		{
-			usernameField: 'email',
-			passwordField: 'password',
-			passReqToCallback: true,
-		},
-		async (req, email, password, done) => {
-			try {
-				// check if user exists
-				const userExists = await UserRepository.findOneBy({ email: email });
-				if (userExists) {
-					return done(null, false);
-				} // Create a new user with the user data provided
-				bcrypt.hash(password, 10, async (err, hashedPassword) => {
-					if (err) {
-						done(err, false);
-					}
-
-					const user = await UserRepository.save({
-						name: req.body.name,
-						bio: '',
-						email,
-						photo: '',
-						password: hashedPassword,
-						provider: '',
-						phoneNumber: '',
-					});
-					delete user.provider;
-					delete user.password;
-
-					return done(null, user);
-				});
-			} catch (error) {
-				done(error);
-			}
-		}
-	)
-);
-
-passport.use(
-	'local-login',
-	new LocalStrategy(
-		{
-			usernameField: 'email',
-			passwordField: 'password',
-		},
-		async (email, password, done) => {
-			try {
-				const user = await UserRepository.findOneBy({ email: email });
-				if (!user) return done(null, false);
-				const isValidPassword = bcrypt.compareSync(password, user.password);
-				if (!isValidPassword) return done(null, false);
-				return done(null, user); // if passwords match return user
-			} catch (error) {
-				console.log(error);
-				return done(error, false);
-			}
-		}
-	)
-);
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
 router.get(
@@ -172,18 +112,7 @@ router.get('/login/success', checkIsLoggedIn, (req: Request, res: Response) => {
 	res.json({ message: 'login success', success: true, user: req.user, token });
 });
 
-router.post(
-	'/register',
-	passport.authenticate('local-signup', { session: false }),
-	async (req: Request, res: Response) => {
-		const token = generateAccessToken(req.user);
-		res.status(201).json({
-			message: 'account created succesfully',
-			success: true,
-			user: req.user,
-			token: token,
-		});
-		/*
+router.post('/register', async (req, res) => {
 	const { email, password, name } = req.body;
 
 	let user = await UserRepository.findOneBy({ email });
@@ -228,73 +157,51 @@ router.post(
 			user,
 			token: token,
 		});
-	});*/
-	}
-);
+	});
+});
 
-// router.post('/login', async (req: Request, res: Response) => {
-// 	const { email, password } = req.body;
-// 	let user = await UserRepository.findOneBy({ email });
+router.post('/login', async (req: Request, res: Response) => {
+	const { email, password } = req.body;
+	let user = await UserRepository.findOneBy({ email });
 
-// 	if (!user) {
-// 		res.status(HttpStatusCode.NOT_FOUND);
-// 		return res.json({
-// 			date: Date.now(),
-// 			message: 'account not found. please sign up',
-// 			error: true,
-// 		});
-// 	}
-
-// 	if (user.provider) {
-// 		res.status(HttpStatusCode.BAD_REQUEST);
-// 		return res.json({
-// 			date: Date.now(),
-// 			message: `user registered using ${user.provider} .please login to continue`,
-// 			error: true,
-// 		});
-// 	}
-
-// 	const isValidPassword = bcrypt.compareSync(password, user.password);
-// 	if (!isValidPassword) {
-// 		res.status(HttpStatusCode.BAD_REQUEST);
-// 		return res.json({
-// 			date: Date.now(),
-// 			message: `invalid email or password`,
-// 			error: true,
-// 		});
-// 	}
-
-// 	delete user.provider;
-// 	delete user.password;
-// 	const token = generateAccessToken(user);
-
-// 	res.status(201).json({
-// 		message: 'loggin success',
-// 		success: true,
-// 		user,
-// 		token: token,
-// 	});
-// });
-
-router.post('/login', function (req, res, next) {
-	passport.authenticate('local-login', { session: false }, (err, user, info) => {
-		if (err || !user) {
-			return res.status(400).json({
-				message: 'Something is not right',
-				user: user,
-			});
-		}
-		req.login(user, { session: false }, (err) => {
-			if (err) {
-				res.send(err);
-			}
-
-			// generate a signed son web token with the contents of user object and return it in the response
-			// const token = jwt.sign(user, 'your_jwt_secret');
-			// return res.json({ user, token });
-			res.send('user is logged in');
+	if (!user) {
+		res.status(HttpStatusCode.NOT_FOUND);
+		return res.json({
+			date: Date.now(),
+			message: 'account not found. please sign up',
+			error: true,
 		});
-	})(req, res);
+	}
+
+	if (user.provider) {
+		res.status(HttpStatusCode.BAD_REQUEST);
+		return res.json({
+			date: Date.now(),
+			message: `user registered using ${user.provider} .please login to continue`,
+			error: true,
+		});
+	}
+
+	const isValidPassword = bcrypt.compareSync(password, user.password);
+	if (!isValidPassword) {
+		res.status(HttpStatusCode.BAD_REQUEST);
+		return res.json({
+			date: Date.now(),
+			message: `invalid email or password`,
+			error: true,
+		});
+	}
+
+	delete user.provider;
+	delete user.password;
+	const token = generateAccessToken(user);
+
+	res.status(200).json({
+		message: 'loggin success',
+		success: true,
+		user,
+		token: token,
+	});
 });
 
 export default { path: '/auth', router };
