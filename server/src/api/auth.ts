@@ -80,7 +80,6 @@ passport.use(
 			callbackURL: '/auth/github/callback',
 		},
 		async function (accessToken, refreshToken, profile, done) {
-			console.log('profile: ', profile);
 			let user = await UserRepository.findOneBy({ email: profile.emails[0].value });
 
 			if (user && user.provider !== profile.provider)
