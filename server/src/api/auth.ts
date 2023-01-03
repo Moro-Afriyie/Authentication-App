@@ -5,7 +5,7 @@ import passport = require('passport');
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import * as Jwt from 'jsonwebtoken';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as GitHubStrategy } from 'passport-github2';
 import { UserRepository } from './users';
 import { checkIsLoggedIn } from '../middlewares/jwtAuth';
 import * as bcrypt from 'bcrypt';
@@ -43,6 +43,7 @@ function generateAccessToken(user, expiresIn?: string) {
 	return token;
 }
 
+// google
 passport.use(
 	new GoogleStrategy(
 		{
@@ -71,11 +72,41 @@ passport.use(
 	)
 );
 
+// github
+passport.use(
+	new GitHubStrategy(
+		{
+			clientID: process.env.GITHUB_CLIENT_ID,
+			clientSecret: process.env.GITHUB_CLIENT_SECRET,
+			callbackURL: '/auth/github/callback',
+		},
+		function (accessToken, refreshToken, profile, done) {
+			console.log('user: ', profile);
+			return done(null, profile);
+		}
+	)
+);
+
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
 router.get(
 	'/google/callback',
 	passport.authenticate('google', {
+		failureRedirect: '/auth/login/failed',
+		session: false,
+		passReqToCallback: true,
+	}),
+	(req: Request, res: Response) => {
+		const token = generateAccessToken(req.user, '5m'); // used to allow the user to login again and get a new token since it's exposed in the url
+		res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
+	}
+);
+
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+
+router.get(
+	'/github/callback',
+	passport.authenticate('github', {
 		failureRedirect: '/auth/login/failed',
 		session: false,
 		passReqToCallback: true,

@@ -6,8 +6,6 @@ import cors = require('cors');
 import { createAPI } from './api';
 import { HttpStatusCode } from './@types';
 import passport = require('passport');
-import cookieSession = require('cookie-session');
-import cookieParser = require('cookie-parser');
 
 // create express app
 const app = express();
