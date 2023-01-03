@@ -4,8 +4,19 @@ import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
 import { APIError } from '../error';
 import { checkIsLoggedIn } from '../middlewares/jwtAuth';
+import Joi = require('joi');
 
 const router: Router = Router();
+
+const userSchema = Joi.object({
+	name: Joi.string().min(3).max(30).required(),
+	email: Joi.string()
+		.email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+		.required(),
+	photo: Joi.string()
+		.uri({ scheme: ['http', 'https'] })
+		.allow(''),
+});
 
 export const UserRepository = AppDataSource.getRepository(User);
 
@@ -15,6 +26,16 @@ router.get('/', async (req, res) => {
 });
 
 router.put('/', checkIsLoggedIn, async (req, res) => {
+	const { error } = userSchema.validate(req.body);
+	if (error) {
+		res.status(HttpStatusCode.BAD_REQUEST);
+		return res.json({
+			date: Date.now(),
+			message: error.message.replace(/\"/g, ''),
+			error: true,
+		});
+	}
+
 	const user = await UserRepository.findOneBy({ id: req.user.id });
 
 	if (!user) {

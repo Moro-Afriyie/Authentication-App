@@ -183,7 +183,7 @@ router.post('/register', async (req, res) => {
 	const { email, password, name } = req.body;
 	const { error } = RegisterationSchema.validate(req.body);
 	if (error) {
-		res.status(HttpStatusCode.NOT_FOUND);
+		res.status(HttpStatusCode.BAD_REQUEST);
 		return res.json({
 			date: Date.now(),
 			message: error.message.replace(/\"/g, ''),
@@ -240,7 +240,7 @@ router.post('/login', async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 	const { error } = loginSchema.validate(req.body);
 	if (error) {
-		res.status(HttpStatusCode.NOT_FOUND);
+		res.status(HttpStatusCode.BAD_REQUEST);
 		return res.json({
 			date: Date.now(),
 			message: error.message.replace(/\"/g, ''),
