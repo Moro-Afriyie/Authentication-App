@@ -80,8 +80,17 @@ passport.use(
 			callbackURL: '/auth/github/callback',
 		},
 		function (accessToken, refreshToken, profile, done) {
-			console.log('user: ', profile);
-			return done(null, profile);
+			// console.log('user: ', profile);
+			//   if (!profile._json.email) {
+			// 		return done(null, false, {
+			// 			message:
+			// 				'Google Account is not registered with email. Please sign in using other methods',
+			// 		});
+			// 	}
+			//	return done(null, profile);
+			return done(null, false, {
+				message: 'Github Account is not registered with email. Please sign in using other methods',
+			});
 		}
 	)
 );
@@ -101,20 +110,25 @@ router.get(
 	}
 );
 
-router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+router.get('/github', passport.authenticate('github', { scope: ['user:email'], session: false }));
 
-router.get(
-	'/github/callback',
-	passport.authenticate('github', {
-		failureRedirect: '/auth/login/failed',
-		session: false,
-		passReqToCallback: true,
-	}),
-	(req: Request, res: Response) => {
-		const token = generateAccessToken(req.user, '5m'); // used to allow the user to login again and get a new token since it's exposed in the url
-		res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
-	}
-);
+router.get('/github/callback', (req: Request, res: Response, next: NextFunction) => {
+	passport.authenticate(
+		'github',
+		{
+			scope: ['user:email'],
+			session: false,
+			passReqToCallback: true,
+		},
+		(err, user, info) => {
+			if (err || !user) {
+				return res.redirect(process.env.CLIENT_HOME_PAGE_URL + '?error=' + info?.message);
+			}
+			const token = generateAccessToken(req.user, '5m'); // used to allow the user to login again and get a new token since it's exposed in the url
+			res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
+		}
+	)(req, res, next);
+});
 
 router.get('/logout', (req: Request, res: Response, next: NextFunction) => {
 	req.logout(function (err) {
@@ -125,7 +139,7 @@ router.get('/logout', (req: Request, res: Response, next: NextFunction) => {
 	});
 });
 
-router.post('/login/failed', (req: Request, res: Response) => {
+router.get('/login/failed', (req: Request, res: Response) => {
 	throw new APIError(
 		'UNAUTHORIZED',
 		HttpStatusCode.UNAUTHORISED,
