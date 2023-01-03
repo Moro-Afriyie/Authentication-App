@@ -6,6 +6,7 @@ import { BASE_URL } from "../../utils/config";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useSignIn } from "react-auth-kit";
+import ErrorMessage from "../_shared/ErrorMessage";
 
 const SignUp: React.FunctionComponent = () => {
   const signIn = useSignIn();
@@ -37,12 +38,20 @@ const SignUp: React.FunctionComponent = () => {
     window.open(`${BASE_URL}/auth/${account}`, "_self");
   };
 
+  const handleClose = () => {
+    console.log("handle close clicked: ");
+  };
+
   return (
     <div className="login-container">
       <div className="login-box">
         <div className="login-box__logo">
           <img src={logo} alt="logo" />
         </div>
+        <ErrorMessage
+          message={"some random message"}
+          handleClose={handleClose}
+        />
         <div className="login-box__heading">
           <p>Sign Up</p>
         </div>

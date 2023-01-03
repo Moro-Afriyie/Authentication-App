@@ -7,6 +7,7 @@ import axios from "axios";
 import { useSignIn } from "react-auth-kit";
 import { useFormik } from "formik";
 import { BASE_URL, ICONS } from "../../utils/config";
+import ErrorMessage from "../_shared/ErrorMessage";
 
 const Login: React.FunctionComponent = () => {
   const location = useLocation();
@@ -77,15 +78,10 @@ const Login: React.FunctionComponent = () => {
         <div className="login-box__logo">
           <img src={logo} alt="logo" />
         </div>
-        <div className="error-message">
-          <span>some random text...</span>
-          <span
-            className="material-symbols-outlined close-btn"
-            onClick={handleClose}
-          >
-            {ICONS.CLOSE}
-          </span>
-        </div>
+        <ErrorMessage
+          message={"some random message"}
+          handleClose={handleClose}
+        />
         <div className="login-box__heading">
           <p>Login</p>
         </div>
