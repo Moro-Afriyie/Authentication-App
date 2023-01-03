@@ -10,7 +10,7 @@ import { BASE_URL } from "../../utils/config";
 
 const Login: React.FunctionComponent = () => {
   const location = useLocation();
-  const { code } = queryString.parse(location.search);
+  const { code, error } = queryString.parse(location.search);
   const signIn = useSignIn();
   const navigate = useNavigate();
 
@@ -63,6 +63,8 @@ const Login: React.FunctionComponent = () => {
     if (code) {
       // make a request to the backend and get the user details + a new token
       fetchUser();
+    } else if (error) {
+      console.log(error);
     }
   }, []);
 

@@ -7,10 +7,12 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import ProfileDetails from "./components/profileDetails/ProfileDetails";
 import EditProfile from "./components/editProfile/EditProfile";
 import { RequireAuth } from "react-auth-kit";
+import SnackBar from "./components/_shared/SnackBar";
 
 function App() {
   return (
     <div className="container">
+      <SnackBar />
       <Routes>
         <Route
           path="/profile"
