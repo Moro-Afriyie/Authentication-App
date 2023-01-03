@@ -6,7 +6,7 @@ import queryString from "query-string";
 import axios from "axios";
 import { useSignIn } from "react-auth-kit";
 import { useFormik } from "formik";
-import { BASE_URL, ICONS } from "../../utils/config";
+import { BASE_URL } from "../../utils/config";
 import ErrorMessage from "../_shared/ErrorMessage";
 
 const Login: React.FunctionComponent = () => {
@@ -14,6 +14,7 @@ const Login: React.FunctionComponent = () => {
   const { code, error } = queryString.parse(location.search);
   const signIn = useSignIn();
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   const formik = useFormik({
     initialValues: {
@@ -44,6 +45,11 @@ const Login: React.FunctionComponent = () => {
         withCredentials: true,
       });
 
+      if (res.data.error) {
+        setErrorMessage(res.data.message);
+        return;
+      }
+
       signIn({
         token: res.data.token,
         expiresIn: 3600,
@@ -64,24 +70,24 @@ const Login: React.FunctionComponent = () => {
     if (code) {
       // make a request to the backend and get the user details + a new token
       fetchUser();
+      console.log("code: ", code);
     } else if (error) {
-      console.log(error);
+      setErrorMessage(error as string);
     }
   }, []);
 
-  const handleClose = () => {
-    console.log("handle close");
-  };
   return (
     <div className="login-container">
       <div className="login-box">
         <div className="login-box__logo">
           <img src={logo} alt="logo" />
         </div>
-        <ErrorMessage
-          message={"some random message"}
-          handleClose={handleClose}
-        />
+        {errorMessage && (
+          <ErrorMessage
+            message={errorMessage}
+            handleClose={() => setErrorMessage("")}
+          />
+        )}
         <div className="login-box__heading">
           <p>Login</p>
         </div>

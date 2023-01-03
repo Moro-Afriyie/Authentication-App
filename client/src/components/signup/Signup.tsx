@@ -35,6 +35,7 @@ const SignUp: React.FunctionComponent = () => {
   });
 
   const handleSocialLogin = (account: string) => {
+    navigate("/login");
     window.open(`${BASE_URL}/auth/${account}`, "_self");
   };
 
@@ -98,11 +99,8 @@ const SignUp: React.FunctionComponent = () => {
         </form>
         <div className="login-box__socials">
           <p>or continue with these social profile</p>
-          <div
-            className="login-box__social-icons"
-            onClick={() => handleSocialLogin("google")}
-          >
-            <div className="icon">
+          <div className="login-box__social-icons">
+            <div className="icon" onClick={() => handleSocialLogin("google")}>
               <i className="fa fa-google fa-lg" aria-hidden="true"></i>
             </div>
             <div className="icon" onClick={() => handleSocialLogin("facebook")}>
