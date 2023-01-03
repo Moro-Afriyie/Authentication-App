@@ -8,6 +8,15 @@ import { useSignIn } from "react-auth-kit";
 import { useFormik } from "formik";
 import { BASE_URL } from "../../utils/config";
 import ErrorMessage from "../_shared/ErrorMessage";
+import * as Yup from "yup";
+
+const LoginSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email").required("Email is Required"),
+  password: Yup.string()
+    .min(5, "password should have a minimum of 5 characters")
+    .max(20, "password should have a maximum of 20 characters")
+    .required("password is required"),
+});
 
 const Login: React.FunctionComponent = () => {
   const location = useLocation();
@@ -21,9 +30,14 @@ const Login: React.FunctionComponent = () => {
       email: "",
       password: "",
     },
+    validationSchema: LoginSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
         const res = await axios.post(`${BASE_URL}/auth/login`, values);
+        if (res.data.error) {
+          setErrorMessage(res.data.message);
+          return;
+        }
         console.log("response: ", res.data.user);
         signIn({
           token: res.data.token,
@@ -92,29 +106,54 @@ const Login: React.FunctionComponent = () => {
           <p>Login</p>
         </div>
         <form className="login-box__form" onSubmit={formik.handleSubmit}>
-          <div className="login-box__form-control">
-            <i className="fa fa-envelope fa-lg" aria-hidden="true"></i>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value={formik.values.email}
-              placeholder="Email"
-              required
-              onChange={formik.handleChange}
-            />
+          <div>
+            <div
+              className="login-box__form-control"
+              style={{
+                border:
+                  formik.errors.email && formik.touched.email
+                    ? "1px solid red"
+                    : "",
+              }}
+            >
+              <i className="fa fa-envelope fa-lg" aria-hidden="true"></i>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={formik.values.email}
+                placeholder="Email"
+                onChange={formik.handleChange}
+              />
+            </div>
+            {formik.errors.email && formik.touched.email ? (
+              <div className="form__error">{formik.errors.email}</div>
+            ) : null}
           </div>
-          <div className="login-box__form-control">
-            <i className="fa fa-lock fa-2x" aria-hidden="true"></i>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              value={formik.values.password}
-              placeholder="Password"
-              required
-              onChange={formik.handleChange}
-            />
+          <div>
+            <div
+              className="login-box__form-control"
+              style={{
+                border:
+                  formik.errors.password && formik.touched.password
+                    ? "1px solid red"
+                    : "",
+              }}
+            >
+              <i className="fa fa-lock fa-2x" aria-hidden="true"></i>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                value={formik.values.password}
+                placeholder="Password"
+                required
+                onChange={formik.handleChange}
+              />
+            </div>
+            {formik.errors.password && formik.touched.password ? (
+              <div className="form__error">{formik.errors.password}</div>
+            ) : null}
           </div>
           <button className="login-box__form-button" type="submit">
             Login
