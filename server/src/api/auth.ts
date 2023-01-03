@@ -9,7 +9,6 @@ import { Strategy as GitHubStrategy } from 'passport-github2';
 import { UserRepository } from './users';
 import { checkIsLoggedIn } from '../middlewares/jwtAuth';
 import * as bcrypt from 'bcrypt';
-import _ from 'lodash';
 
 const jwtOptions = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -62,7 +61,7 @@ passport.use(
 					email: profile.emails[0].value,
 					photo: profile.photos[0].value,
 					password: '',
-					provider: 'google',
+					provider: profile.provider,
 					phoneNumber: '',
 				});
 			}
