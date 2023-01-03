@@ -9,6 +9,22 @@ import { Strategy as GitHubStrategy } from 'passport-github2';
 import { UserRepository } from './users';
 import { checkIsLoggedIn } from '../middlewares/jwtAuth';
 import * as bcrypt from 'bcrypt';
+import Joi = require('joi');
+
+const RegisterationSchema = Joi.object({
+	name: Joi.string().min(3).max(30).required(),
+	email: Joi.string()
+		.email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+		.required(),
+	password: Joi.string().required(),
+});
+
+const loginSchema = Joi.object({
+	email: Joi.string()
+		.email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+		.required(),
+	password: Joi.string().required(),
+});
 
 const jwtOptions = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -165,6 +181,15 @@ router.get('/login/success', checkIsLoggedIn, (req: Request, res: Response) => {
 
 router.post('/register', async (req, res) => {
 	const { email, password, name } = req.body;
+	const { error } = RegisterationSchema.validate(req.body);
+	if (error) {
+		res.status(HttpStatusCode.NOT_FOUND);
+		return res.json({
+			date: Date.now(),
+			message: error.message.replace(/\"/g, ''),
+			error: true,
+		});
+	}
 
 	let user = await UserRepository.findOneBy({ email });
 
@@ -212,8 +237,16 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req: Request, res: Response) => {
-	console.log('req body: ', req.body);
 	const { email, password } = req.body;
+	const { error } = loginSchema.validate(req.body);
+	if (error) {
+		res.status(HttpStatusCode.NOT_FOUND);
+		return res.json({
+			date: Date.now(),
+			message: error.message.replace(/\"/g, ''),
+			error: true,
+		});
+	}
 	let user = await UserRepository.findOneBy({ email });
 
 	if (!user) {
