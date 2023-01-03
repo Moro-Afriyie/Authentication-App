@@ -4,4 +4,5 @@ export const BASE_URL =
 export const ICONS = {
   INFO: "info",
   SUCCESS: "check_circle",
+  CLOSE: "close",
 };
