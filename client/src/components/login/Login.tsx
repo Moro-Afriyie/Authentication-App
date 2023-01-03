@@ -6,7 +6,7 @@ import queryString from "query-string";
 import axios from "axios";
 import { useSignIn } from "react-auth-kit";
 import { useFormik } from "formik";
-import { BASE_URL } from "../../utils/config";
+import { BASE_URL, ICONS } from "../../utils/config";
 
 const Login: React.FunctionComponent = () => {
   const location = useLocation();
@@ -68,11 +68,23 @@ const Login: React.FunctionComponent = () => {
     }
   }, []);
 
+  const handleClose = () => {
+    console.log("handle close");
+  };
   return (
     <div className="login-container">
       <div className="login-box">
         <div className="login-box__logo">
           <img src={logo} alt="logo" />
+        </div>
+        <div className="error-message">
+          <span>some random text...</span>
+          <span
+            className="material-symbols-outlined close-btn"
+            onClick={handleClose}
+          >
+            {ICONS.CLOSE}
+          </span>
         </div>
         <div className="login-box__heading">
           <p>Login</p>
