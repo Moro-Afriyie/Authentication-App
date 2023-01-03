@@ -79,18 +79,29 @@ passport.use(
 			clientSecret: process.env.GITHUB_CLIENT_SECRET,
 			callbackURL: '/auth/github/callback',
 		},
-		function (accessToken, refreshToken, profile, done) {
-			// console.log('user: ', profile);
-			//   if (!profile._json.email) {
-			// 		return done(null, false, {
-			// 			message:
-			// 				'Google Account is not registered with email. Please sign in using other methods',
-			// 		});
-			// 	}
-			//	return done(null, profile);
-			return done(null, false, {
-				message: 'Github Account is not registered with email. Please sign in using other methods',
-			});
+		async function (accessToken, refreshToken, profile, done) {
+			console.log('profile: ', profile);
+			let user = await UserRepository.findOneBy({ email: profile.emails[0].value });
+
+			if (user && user.provider !== profile.provider)
+				return done(null, false, {
+					message:
+						'Github Account is not registered with this email. Please sign in using other methods',
+				});
+
+			if (!user) {
+				user = await UserRepository.save({
+					name: `${profile.name.displayName}`,
+					bio: profile.bio || '',
+					email: profile.emails[0].value || '',
+					photo: profile.photos[0].value,
+					password: '',
+					provider: profile.provider,
+					phoneNumber: '',
+				});
+			}
+
+			return done(null, user);
 		}
 	)
 );
@@ -124,7 +135,7 @@ router.get('/github/callback', (req: Request, res: Response, next: NextFunction)
 			if (err || !user) {
 				return res.redirect(process.env.CLIENT_HOME_PAGE_URL + '?error=' + info?.message);
 			}
-			const token = generateAccessToken(req.user, '5m'); // used to allow the user to login again and get a new token since it's exposed in the url
+			const token = generateAccessToken(req.user, '5m');
 			res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
 		}
 	)(req, res, next);
