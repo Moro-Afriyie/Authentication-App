@@ -17,7 +17,7 @@ app.use(helmet());
 
 app.use(
 	cookieSession({
-		secret: 'keyboard cat',
+		secret: process.env.COOKIE_KEY_1,
 	})
 );
 
