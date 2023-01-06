@@ -84,7 +84,6 @@ const Login: React.FunctionComponent = () => {
     if (code) {
       // make a request to the backend and get the user details + a new token
       fetchUser();
-      console.log("code: ", code);
     } else if (error) {
       setErrorMessage(error as string);
     }

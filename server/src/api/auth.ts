@@ -67,8 +67,14 @@ passport.use(
 			callbackURL: '/auth/google/callback',
 			passReqToCallback: true,
 		},
-		async (req, accessToken, refreshToken, profile, cb) => {
+		async (req, accessToken, refreshToken, profile, cb: any) => {
 			let user = await UserRepository.findOneBy({ email: profile.emails[0].value });
+
+			if (user && user.provider !== profile.provider)
+				return cb(null, false, {
+					message:
+						'Google Account is not registered with this email. Please sign in using other methods',
+				});
 
 			if (!user) {
 				user = await UserRepository.save({
@@ -87,7 +93,23 @@ passport.use(
 	)
 );
 
-// github
+router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
+
+router.get(
+	'/google/callback',
+	passport.authenticate('google', {
+		failureRedirect: '/auth/login/failed',
+		session: false,
+		passReqToCallback: true,
+	}),
+	(req: Request, res: Response) => {
+		const token = generateAccessToken(req.user, '2m'); // used to allow the user to login again and get a new token since it's exposed in the url
+		res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
+	}
+);
+// end google
+
+//begin github
 passport.use(
 	new GitHubStrategy(
 		{
@@ -121,21 +143,6 @@ passport.use(
 	)
 );
 
-router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
-
-router.get(
-	'/google/callback',
-	passport.authenticate('google', {
-		failureRedirect: '/auth/login/failed',
-		session: false,
-		passReqToCallback: true,
-	}),
-	(req: Request, res: Response) => {
-		const token = generateAccessToken(req.user, '5m'); // used to allow the user to login again and get a new token since it's exposed in the url
-		res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
-	}
-);
-
 router.get('/github', passport.authenticate('github', { scope: ['user:email'], session: false }));
 
 router.get('/github/callback', (req: Request, res: Response, next: NextFunction) => {
@@ -150,11 +157,125 @@ router.get('/github/callback', (req: Request, res: Response, next: NextFunction)
 			if (err || !user) {
 				return res.redirect(process.env.CLIENT_HOME_PAGE_URL + '?error=' + info?.message);
 			}
-			const token = generateAccessToken(req.user, '5m');
+			const token = generateAccessToken(req.user, '2m');
 			res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
 		}
 	)(req, res, next);
 });
+// end github
+
+// begin twitter
+passport.use(
+	new GitHubStrategy(
+		{
+			clientID: process.env.GITHUB_CLIENT_ID,
+			clientSecret: process.env.GITHUB_CLIENT_SECRET,
+			callbackURL: '/auth/github/callback',
+		},
+		async function (accessToken, refreshToken, profile, done) {
+			let user = await UserRepository.findOneBy({ email: profile.emails[0].value });
+
+			if (user && user.provider !== profile.provider)
+				return done(null, false, {
+					message:
+						'Twitter Account is not registered with this email. Please sign in using other methods',
+				});
+
+			if (!user) {
+				user = await UserRepository.save({
+					name: `${profile.name.displayName}`,
+					bio: profile.bio || '',
+					email: profile.emails[0].value || '',
+					photo: profile.photos[0].value,
+					password: '',
+					provider: profile.provider,
+					phoneNumber: '',
+				});
+			}
+
+			return done(null, user);
+		}
+	)
+);
+
+router.get('/twitter', passport.authenticate('twitter', { scope: ['user:email'], session: false }));
+
+router.get('/twitter/callback', (req: Request, res: Response, next: NextFunction) => {
+	passport.authenticate(
+		'twitter',
+		{
+			scope: ['user:email'],
+			session: false,
+			passReqToCallback: true,
+		},
+		(err, user, info) => {
+			if (err || !user) {
+				return res.redirect(process.env.CLIENT_HOME_PAGE_URL + '?error=' + info?.message);
+			}
+			const token = generateAccessToken(req.user, '2m');
+			res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
+		}
+	)(req, res, next);
+});
+// end twitter
+
+// begin facebook
+passport.use(
+	new GitHubStrategy(
+		{
+			clientID: process.env.GITHUB_CLIENT_ID,
+			clientSecret: process.env.GITHUB_CLIENT_SECRET,
+			callbackURL: '/auth/facebook/callback',
+		},
+		async function (accessToken, refreshToken, profile, done) {
+			let user = await UserRepository.findOneBy({ email: profile.emails[0].value });
+
+			if (user && user.provider !== profile.provider)
+				return done(null, false, {
+					message:
+						'Facebook Account is not registered with this email. Please sign in using other methods',
+				});
+
+			if (!user) {
+				user = await UserRepository.save({
+					name: `${profile.name.displayName}`,
+					bio: profile.bio || '',
+					email: profile.emails[0].value || '',
+					photo: profile.photos[0].value,
+					password: '',
+					provider: profile.provider,
+					phoneNumber: '',
+				});
+			}
+
+			return done(null, user);
+		}
+	)
+);
+
+router.get(
+	'/facebook',
+	passport.authenticate('facebook', { scope: ['user:email'], session: false })
+);
+
+router.get('/facebook/callback', (req: Request, res: Response, next: NextFunction) => {
+	passport.authenticate(
+		'facebook',
+		{
+			scope: ['user:email'],
+			session: false,
+			passReqToCallback: true,
+		},
+		(err, user, info) => {
+			if (err || !user) {
+				return res.redirect(process.env.CLIENT_HOME_PAGE_URL + '?error=' + info?.message);
+			}
+			const token = generateAccessToken(req.user, '2m');
+			res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
+		}
+	)(req, res, next);
+});
+// end facebook
 
 router.get('/logout', (req: Request, res: Response, next: NextFunction) => {
 	req.logout(function (err) {
@@ -258,7 +379,7 @@ router.post('/login', async (req: Request, res: Response) => {
 		});
 	}
 
-	if (user.provider) {
+	if (user.provider && !user.password) {
 		res.status(HttpStatusCode.BAD_REQUEST);
 		return res.json({
 			date: Date.now(),
