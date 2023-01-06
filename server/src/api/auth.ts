@@ -6,6 +6,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import * as Jwt from 'jsonwebtoken';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { Strategy as GitHubStrategy } from 'passport-github2';
+import { Strategy as FacebookStratey } from 'passport-facebook';
 import { UserRepository } from './users';
 import { checkIsLoggedIn } from '../middlewares/jwtAuth';
 import * as bcrypt from 'bcrypt';
@@ -221,10 +222,10 @@ router.get('/twitter/callback', (req: Request, res: Response, next: NextFunction
 
 // begin facebook
 passport.use(
-	new GitHubStrategy(
+	new FacebookStratey(
 		{
-			clientID: process.env.GITHUB_CLIENT_ID,
-			clientSecret: process.env.GITHUB_CLIENT_SECRET,
+			clientID: process.env.FACEBOOK_CLIENT_ID,
+			clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
 			callbackURL: '/auth/facebook/callback',
 		},
 		async function (accessToken, refreshToken, profile, done) {
