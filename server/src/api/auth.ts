@@ -6,7 +6,8 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import * as Jwt from 'jsonwebtoken';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { Strategy as GitHubStrategy } from 'passport-github2';
-import { Strategy as FacebookStratey } from 'passport-facebook';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
+import { Strategy as TwitterStrategy } from 'passport-twitter';
 import { UserRepository } from './users';
 import { checkIsLoggedIn } from '../middlewares/jwtAuth';
 import * as bcrypt from 'bcrypt';
@@ -167,11 +168,11 @@ router.get('/github/callback', (req: Request, res: Response, next: NextFunction)
 
 // begin twitter
 passport.use(
-	new GitHubStrategy(
+	new TwitterStrategy(
 		{
-			clientID: process.env.GITHUB_CLIENT_ID,
-			clientSecret: process.env.GITHUB_CLIENT_SECRET,
-			callbackURL: '/auth/github/callback',
+			consumerKey: process.env.TWITTER_API_KEY,
+			consumerSecret: process.env.TWITTER_API_SECRET,
+			callbackURL: '/auth/twitter/callback',
 		},
 		async function (accessToken, refreshToken, profile, done) {
 			let user = await UserRepository.findOneBy({ email: profile.emails[0].value });
@@ -199,13 +200,12 @@ passport.use(
 	)
 );
 
-router.get('/twitter', passport.authenticate('twitter', { scope: ['user:email'], session: false }));
+router.get('/twitter', passport.authenticate('twitter', { session: false }));
 
 router.get('/twitter/callback', (req: Request, res: Response, next: NextFunction) => {
 	passport.authenticate(
 		'twitter',
 		{
-			scope: ['user:email'],
 			session: false,
 			passReqToCallback: true,
 		},
@@ -222,7 +222,7 @@ router.get('/twitter/callback', (req: Request, res: Response, next: NextFunction
 
 // begin facebook
 passport.use(
-	new FacebookStratey(
+	new FacebookStrategy(
 		{
 			clientID: process.env.FACEBOOK_CLIENT_ID,
 			clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
@@ -254,16 +254,13 @@ passport.use(
 	)
 );
 
-router.get(
-	'/facebook',
-	passport.authenticate('facebook', { scope: ['user:email'], session: false })
-);
+router.get('/facebook', passport.authenticate('facebook', { scope: ['email'], session: false }));
 
 router.get('/facebook/callback', (req: Request, res: Response, next: NextFunction) => {
 	passport.authenticate(
 		'facebook',
 		{
-			scope: ['user:email'],
+			scope: ['email'],
 			session: false,
 			passReqToCallback: true,
 		},

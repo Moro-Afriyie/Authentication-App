@@ -36,6 +36,7 @@
 		"passport-google-oauth20": "^2.0.0",
 		"passport-jwt": "^4.0.0",
 		"passport-local": "^1.0.0",
+		"passport-twitter": "^1.0.4",
 		"reflect-metadata": "^0.1.13",
 		"ts-node": "10.7.0",
 		"typeorm": "0.3.7"
