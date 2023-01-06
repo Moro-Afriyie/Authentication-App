@@ -6,12 +6,20 @@ import cors = require('cors');
 import { createAPI } from './api';
 import { HttpStatusCode } from './@types';
 import passport = require('passport');
+import session from 'express-session';
+import cookieSession = require('cookie-session');
 
 // create express app
 const app = express();
 
 // setup security headers
 app.use(helmet());
+
+app.use(
+	cookieSession({
+		secret: 'keyboard cat',
+	})
+);
 
 // setup cross-origin resource header sharing
 app.use(

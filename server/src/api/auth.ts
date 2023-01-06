@@ -171,36 +171,38 @@ passport.use(
 	new TwitterStrategy(
 		{
 			consumerKey: process.env.TWITTER_API_KEY,
-			consumerSecret: process.env.TWITTER_API_SECRET,
+			consumerSecret: process.env.TWITTER_API_KEY_SECRET,
 			callbackURL: '/auth/twitter/callback',
 		},
 		async function (accessToken, refreshToken, profile, done) {
-			let user = await UserRepository.findOneBy({ email: profile.emails[0].value });
+			// let user = await UserRepository.findOneBy({ email: profile.emails[0].value });
 
-			if (user && user.provider !== profile.provider)
-				return done(null, false, {
-					message:
-						'Twitter Account is not registered with this email. Please sign in using other methods',
-				});
+			// if (user && user.provider !== profile.provider)
+			// 	return done(null, false, {
+			// 		message:
+			// 			'Twitter Account is not registered with this email. Please sign in using other methods',
+			// 	});
 
-			if (!user) {
-				user = await UserRepository.save({
-					name: `${profile.name.displayName}`,
-					bio: profile.bio || '',
-					email: profile.emails[0].value || '',
-					photo: profile.photos[0].value,
-					password: '',
-					provider: profile.provider,
-					phoneNumber: '',
-				});
-			}
+			// if (!user) {
+			// 	user = await UserRepository.save({
+			// 		name: `${profile.name.displayName}`,
+			// 		bio: profile.bio || '',
+			// 		email: profile.emails[0].value || '',
+			// 		photo: profile.photos[0].value,
+			// 		password: '',
+			// 		provider: profile.provider,
+			// 		phoneNumber: '',
+			// 	});
+			// }
 
-			return done(null, user);
+			// return done(null, user);
+			console.log('profile: ', profile);
+			return done(null, profile);
 		}
 	)
 );
 
-router.get('/twitter', passport.authenticate('twitter', { session: false }));
+router.get('/twitter', passport.authenticate('twitter'));
 
 router.get('/twitter/callback', (req: Request, res: Response, next: NextFunction) => {
 	passport.authenticate(
@@ -210,6 +212,9 @@ router.get('/twitter/callback', (req: Request, res: Response, next: NextFunction
 			passReqToCallback: true,
 		},
 		(err, user, info) => {
+			console.log('user: ', user);
+			console.log('error: ', err);
+			console.log('info: ', info);
 			if (err || !user) {
 				return res.redirect(process.env.CLIENT_HOME_PAGE_URL + '?error=' + info?.message);
 			}
