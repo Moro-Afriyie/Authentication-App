@@ -27,4 +27,7 @@ export class User {
 
 	@Column()
 	provider: string;
+
+	@Column({ nullable: true })
+	providerId?: number;
 }

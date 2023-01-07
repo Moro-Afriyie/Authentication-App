@@ -175,27 +175,29 @@ passport.use(
 			callbackURL: '/auth/facebook/callback',
 		},
 		async function (accessToken, refreshToken, profile, done) {
-			let user = await UserRepository.findOneBy({ email: profile.emails[0].value });
+			console.log('profile: ', profile);
+			let user = await UserRepository.findOneBy({ email: profile?.emails[0]?.value });
+			console.log('user: ', user);
 
-			if (user && user.provider !== profile.provider)
-				return done(null, false, {
-					message:
-						'Facebook Account is not registered with this email. Please sign in using other methods',
-				});
+			// if (user && user.provider !== profile.provider)
+			// 	return done(null, false, {
+			// 		message:
+			// 			'Facebook Account is not registered with this email. Please sign in using other methods',
+			// 	});
 
-			if (!user) {
-				user = await UserRepository.save({
-					name: `${profile.name.displayName}`,
-					bio: profile.bio || '',
-					email: profile.emails[0].value || '',
-					photo: profile.photos[0].value,
-					password: '',
-					provider: profile.provider,
-					phoneNumber: '',
-				});
-			}
+			// if (!user) {
+			// 	user = await UserRepository.save({
+			// 		name: `${profile.displayName}`,
+			// 		bio: '',
+			// 		email: profile.emails[0].value || '',
+			// 		photo: profile.profileUrl || '',
+			// 		password: '',
+			// 		provider: profile.provider,
+			// 		phoneNumber: '',
+			// 	});
+			// }
 
-			return done(null, user);
+			// return done(null, user);
 		}
 	)
 );

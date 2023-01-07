@@ -15,11 +15,11 @@ const app = express();
 // setup security headers
 app.use(helmet());
 
-app.use(
-	cookieSession({
-		secret: process.env.COOKIE_KEY_1,
-	})
-);
+// app.use(
+// 	cookieSession({
+// 		secret: process.env.COOKIE_KEY_1,
+// 	})
+// );
 
 // setup cross-origin resource header sharing
 app.use(
