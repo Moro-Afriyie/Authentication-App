@@ -29,5 +29,5 @@ export class User {
 	provider: string;
 
 	@Column({ nullable: true })
-	providerId?: number;
+	providerId?: string;
 }
