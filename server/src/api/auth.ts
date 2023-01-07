@@ -1,3 +1,4 @@
+import { User } from './../entity/User';
 import { HttpStatusCode } from './../@types';
 import { APIError } from './../error';
 import { Router, Request, Response, NextFunction } from 'express';
@@ -70,7 +71,7 @@ passport.use(
 			passReqToCallback: true,
 		},
 		async (req, accessToken, refreshToken, profile, cb: any) => {
-			let user = await UserRepository.findOneBy({ email: profile.emails[0].value });
+			let user: User = await UserRepository.findOneBy({ email: profile.emails[0].value });
 
 			if (user && user.provider !== profile.provider)
 				return cb(null, false, {
@@ -81,12 +82,10 @@ passport.use(
 			if (!user) {
 				user = await UserRepository.save({
 					name: `${profile.name.givenName} ${profile.name.familyName}`,
-					bio: '',
 					email: profile.emails[0].value,
 					photo: profile.photos[0].value,
-					password: '',
 					provider: profile.provider,
-					phoneNumber: '',
+					providerId: profile.id,
 				});
 			}
 
@@ -97,18 +96,22 @@ passport.use(
 
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
-router.get(
-	'/google/callback',
-	passport.authenticate('google', {
-		failureRedirect: '/auth/login/failed',
-		session: false,
-		passReqToCallback: true,
-	}),
-	(req: Request, res: Response) => {
-		const token = generateAccessToken(req.user, '2m'); // used to allow the user to login again and get a new token since it's exposed in the url
-		res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
-	}
-);
+router.get('/google/callback', (req: Request, res: Response, next: NextFunction) => {
+	passport.authenticate(
+		'google',
+		{
+			session: false,
+			passReqToCallback: true,
+		},
+		(err, user, info) => {
+			if (err || !user) {
+				return res.redirect(process.env.CLIENT_HOME_PAGE_URL + '?error=' + info?.message);
+			}
+			const token = generateAccessToken(user, '2m');
+			res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
+		}
+	)(req, res, next);
+});
 // end google
 
 //begin github
@@ -120,7 +123,13 @@ passport.use(
 			callbackURL: '/auth/github/callback',
 		},
 		async function (accessToken, refreshToken, profile, done) {
-			let user = await UserRepository.findOneBy({ email: profile.emails[0].value });
+			let user: User | null = null;
+
+			if (profile.emails[0].value) {
+				user = await UserRepository.findOneBy({ email: profile.emails[0].value });
+			} else {
+				user = await UserRepository.findOneBy({ providerId: profile.id });
+			}
 
 			if (user && user.provider !== profile.provider)
 				return done(null, false, {
@@ -130,13 +139,11 @@ passport.use(
 
 			if (!user) {
 				user = await UserRepository.save({
-					name: `${profile.name.displayName}`,
-					bio: profile.bio || '',
+					name: `${profile.displayName}`,
 					email: profile.emails[0].value || '',
 					photo: profile.photos[0].value,
-					password: '',
 					provider: profile.provider,
-					phoneNumber: '',
+					providerId: profile.id,
 				});
 			}
 
@@ -159,7 +166,7 @@ router.get('/github/callback', (req: Request, res: Response, next: NextFunction)
 			if (err || !user) {
 				return res.redirect(process.env.CLIENT_HOME_PAGE_URL + '?error=' + info?.message);
 			}
-			const token = generateAccessToken(req.user, '2m');
+			const token = generateAccessToken(user, '2m');
 			res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
 		}
 	)(req, res, next);
@@ -176,28 +183,19 @@ passport.use(
 		},
 		async function (accessToken, refreshToken, profile, done) {
 			console.log('profile: ', profile);
-			let user = await UserRepository.findOneBy({ email: profile?.emails[0]?.value });
-			console.log('user: ', user);
+			// facebook doesn't normally come with email so i will search by providerId
+			let user = await UserRepository.findOneBy({ providerId: profile.id });
 
-			// if (user && user.provider !== profile.provider)
-			// 	return done(null, false, {
-			// 		message:
-			// 			'Facebook Account is not registered with this email. Please sign in using other methods',
-			// 	});
+			if (!user) {
+				user = await UserRepository.save({
+					name: `${profile.displayName}`,
+					photo: profile.profileUrl,
+					provider: profile.provider,
+					providerId: profile.id,
+				});
+			}
 
-			// if (!user) {
-			// 	user = await UserRepository.save({
-			// 		name: `${profile.displayName}`,
-			// 		bio: '',
-			// 		email: profile.emails[0].value || '',
-			// 		photo: profile.profileUrl || '',
-			// 		password: '',
-			// 		provider: profile.provider,
-			// 		phoneNumber: '',
-			// 	});
-			// }
-
-			// return done(null, user);
+			return done(null, user);
 		}
 	)
 );
@@ -216,7 +214,7 @@ router.get('/facebook/callback', (req: Request, res: Response, next: NextFunctio
 			if (err || !user) {
 				return res.redirect(process.env.CLIENT_HOME_PAGE_URL + '?error=' + info?.message);
 			}
-			const token = generateAccessToken(req.user, '2m');
+			const token = generateAccessToken(user, '2m');
 			res.redirect(`${process.env.CLIENT_HOME_PAGE_URL}/?code=${token}`);
 		}
 	)(req, res, next);
@@ -283,12 +281,8 @@ router.post('/register', async (req, res) => {
 
 		user = await UserRepository.save({
 			name,
-			bio: '',
 			email,
-			photo: '',
 			password: hashedPassword,
-			provider: '',
-			phoneNumber: '',
 		});
 		delete user.provider;
 		delete user.password;

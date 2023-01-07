@@ -5,28 +5,26 @@ export class User {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column()
-	name: string;
+	@Column({ nullable: true })
+	name?: string;
 
-	@Column('text')
-	bio: string;
+	@Column('text', { nullable: true })
+	bio?: string;
 
-	@Column({
-		unique: true,
-	})
-	email: string;
+	@Column({ nullable: true })
+	email?: string;
 
-	@Column()
-	photo: string;
+	@Column({ nullable: true })
+	photo?: string;
 
-	@Column()
-	phoneNumber: string;
+	@Column({ nullable: true })
+	phoneNumber?: string;
 
-	@Column()
-	password: string;
+	@Column({ nullable: true })
+	password?: string;
 
-	@Column()
-	provider: string;
+	@Column({ nullable: true })
+	provider?: string;
 
 	@Column({ nullable: true })
 	providerId?: string;
