@@ -170,9 +170,9 @@ const Login: React.FunctionComponent = () => {
                 aria-hidden="true"
               ></i>
             </div>
-            <div className="icon" onClick={() => handleSocialLogin("twitter")}>
+            {/* <div className="icon" onClick={() => handleSocialLogin("twitter")}>
               <i className="fa fa-twitter fa-lg" aria-hidden="true"></i>
-            </div>
+            </div> */}
             <div className="icon" onClick={() => handleSocialLogin("github")}>
               <i className="fa fa-github fa-lg" aria-hidden="true"></i>
             </div>
