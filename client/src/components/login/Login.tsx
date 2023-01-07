@@ -3,12 +3,13 @@ import "./Login.scss";
 import logo from "../../assets/devchallenges.svg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import queryString from "query-string";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useSignIn } from "react-auth-kit";
 import { useFormik } from "formik";
 import { BASE_URL } from "../../utils/config";
 import ErrorMessage from "../_shared/ErrorMessage";
 import * as Yup from "yup";
+import Loader from "../_shared/Loader";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is Required"),
@@ -33,12 +34,14 @@ const Login: React.FunctionComponent = () => {
     validationSchema: LoginSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
+        setSubmitting(true);
         const res = await axios.post(`${BASE_URL}/auth/login`, values);
         if (res.data.error) {
           setErrorMessage(res.data.message);
+          setSubmitting(false);
           return;
         }
-        console.log("response: ", res.data.user);
+        setSubmitting(false);
         signIn({
           token: res.data.token,
           expiresIn: 3600,
@@ -47,13 +50,17 @@ const Login: React.FunctionComponent = () => {
         });
         navigate("/profile/username");
       } catch (error) {
+        if (error instanceof AxiosError && error?.response?.status == 404)
+          setErrorMessage(error.response.data.message);
         console.log("error: ", error);
+        setSubmitting(false);
       }
     },
   });
 
   const fetchUser = async () => {
     try {
+      formik.setSubmitting(true);
       const res = await axios.get(`${BASE_URL}/auth/login/success/`, {
         headers: { Authorization: `Bearer ${code}` },
         withCredentials: true,
@@ -61,9 +68,10 @@ const Login: React.FunctionComponent = () => {
 
       if (res.data.error) {
         setErrorMessage(res.data.message);
+        formik.setSubmitting(false);
         return;
       }
-
+      formik.setSubmitting(false);
       signIn({
         token: res.data.token,
         expiresIn: 3600,
@@ -73,6 +81,7 @@ const Login: React.FunctionComponent = () => {
       navigate("/profile/username");
     } catch (error) {
       console.log(error);
+      formik.setSubmitting(false);
     }
   };
 
@@ -155,7 +164,7 @@ const Login: React.FunctionComponent = () => {
             ) : null}
           </div>
           <button className="login-box__form-button" type="submit">
-            Login
+            {formik.isSubmitting ? <Loader /> : "Login"}
           </button>
         </form>
         <div className="login-box__socials">

@@ -8,6 +8,7 @@ import axios from "axios";
 import { useSignIn } from "react-auth-kit";
 import ErrorMessage from "../_shared/ErrorMessage";
 import * as Yup from "yup";
+import Loader from "../_shared/Loader";
 
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
@@ -35,11 +36,14 @@ const SignUp: React.FunctionComponent = () => {
     validationSchema: SignUpSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
+        setSubmitting(true);
         const res = await axios.post(`${BASE_URL}/auth/register/`, values);
         if (res.data.error) {
           setErrorMessage(res.data.message);
+          setSubmitting(false);
           return;
         }
+        setSubmitting(false);
         signIn({
           token: res.data.token,
           expiresIn: 3600,
@@ -49,6 +53,7 @@ const SignUp: React.FunctionComponent = () => {
         navigate("/profile/username");
       } catch (error) {
         console.log("error: ", error);
+        setSubmitting(false);
       }
     },
   });
@@ -147,7 +152,7 @@ const SignUp: React.FunctionComponent = () => {
             ) : null}
           </div>
           <button className="login-box__form-button" type="submit">
-            Sign Up
+            {formik.isSubmitting ? <Loader /> : "Sign Up"}
           </button>
         </form>
         <div className="login-box__socials">
