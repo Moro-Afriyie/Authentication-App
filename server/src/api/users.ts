@@ -10,13 +10,24 @@ import Joi from 'joi';
 const router: Router = Router();
 
 const userSchema = Joi.object({
-	name: Joi.string().min(3).max(30),
-	bio: Joi.string().max(500),
-	email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
+	name: Joi.string().min(3).max(30).allow(''),
+	bio: Joi.string().max(500).allow(''),
+	email: Joi.string()
+		.email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+		.allow(''),
 	photo: Joi.string()
 		.uri({ scheme: ['http', 'https'] })
 		.allow(''),
-	password: Joi.string().min(5).max(20),
+	phoneNumber: Joi.string()
+		.regex(/^\+[0-9]{1,3}\.[0-9]{4,14}(?:x.+)?$/)
+		.min(7)
+		.max(15)
+		.allow('')
+		.messages({
+			'string.pattern.base':
+				'phone number should start with a plus sign, followed by the country code and national number',
+		}),
+	password: Joi.string().min(5).max(20).allow(''),
 });
 
 export const UserRepository = AppDataSource.getRepository(User);
@@ -28,7 +39,9 @@ router.get('/', async (req, res) => {
 
 router.put('/', checkIsLoggedIn, storageMiddleware.single('photo'), async (req, res) => {
 	console.log('req.body: ', req.body);
-	// const { error } = userSchema.validate(req.body);
+
+	const { error } = userSchema.validate(req.body);
+	console.log('error : ', error);
 	// if (error) {
 	// 	res.status(HttpStatusCode.BAD_REQUEST);
 	// 	return res.json({
