@@ -10,8 +10,7 @@ import { BASE_URL } from "../../utils/config";
 const EditProfile: React.FunctionComponent = () => {
   const auth = useAuthUser();
   const authHeader = useAuthHeader();
-  console.log(auth());
-  // TODO: handle password and images on the backend side
+
   const formik = useFormik({
     initialValues: {
       name: auth()?.name || "",
@@ -31,7 +30,7 @@ const EditProfile: React.FunctionComponent = () => {
             "Content-Type": "multipart/form-data",
           },
         });
-        // console.log("response: ", response.data.user);
+        console.log("response: ", response.data.user);
         // update the  authState with the new data from the server
       } catch (error) {
         console.log("error: ", error);

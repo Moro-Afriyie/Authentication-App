@@ -6,6 +6,7 @@ import { User } from '../entity/User';
 import { APIError } from '../error';
 import { checkIsLoggedIn } from '../middlewares/jwtAuth';
 import Joi from 'joi';
+import * as bcrypt from 'bcrypt';
 
 const router: Router = Router();
 
@@ -19,7 +20,7 @@ const userSchema = Joi.object({
 		.uri({ scheme: ['http', 'https'] })
 		.allow(''),
 	phoneNumber: Joi.string()
-		.regex(/^\+[0-9]{1,3}\.[0-9]{4,14}(?:x.+)?$/)
+		.regex(/^\+\d{2}\d{9,}$/)
 		.min(7)
 		.max(15)
 		.allow('')
@@ -38,31 +39,38 @@ router.get('/', async (req, res) => {
 });
 
 router.put('/', checkIsLoggedIn, storageMiddleware.single('photo'), async (req, res) => {
-	console.log('req.body: ', req.body);
-
 	const { error } = userSchema.validate(req.body);
-	console.log('error : ', error);
-	// if (error) {
-	// 	res.status(HttpStatusCode.BAD_REQUEST);
-	// 	return res.json({
-	// 		date: Date.now(),
-	// 		message: error.message.replace(/\"/g, ''),
-	// 		error: true,
-	// 	});
-	// }
 
-	// const user = await UserRepository.findOneBy({ id: req.user.id });
+	console.log('error: ', error);
 
-	// if (!user) {
-	// 	throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'User not found');
-	// }
+	if (error) {
+		res.status(HttpStatusCode.BAD_REQUEST);
+		return res.json({
+			date: Date.now(),
+			message: error.message.replace(/\"/g, ''),
+			error: true,
+		});
+	}
 
-	// const file = req.file;
-	// if (file) {
-	// 	user['photo'] = file.path;
-	// }
+	const user = await UserRepository.findOneBy({ id: req.user.id });
 
-	// Object.assign(user, req.body);
+	if (!user) {
+		throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'User not found');
+	}
+
+	const file = req.file;
+	if (file) {
+		req.body['photo'] = file.path;
+	}
+
+	if (req.body.password) {
+		const hashedPassword = await bcrypt.hash(req.body.password, 10);
+		req.body['password'] = hashedPassword;
+	}
+
+	console.log('old user: ', user);
+	Object.assign(user, req.body);
+	console.log('new user: ', user);
 	// const updatedUser = await UserRepository.save(user);
 	// res.json({ message: 'details updated successfully', succes: true, user: updatedUser });
 });
@@ -72,8 +80,8 @@ router.get('/hello', checkIsLoggedIn, (req, res) => {
 	res.send(req.user);
 });
 
-// router.get('/delete', async (req, res) => {
-// 	await UserRepository.clear();
-// });
+router.get('/delete', async (req, res) => {
+	await UserRepository.clear();
+});
 
 export default { path: '/users', router };
