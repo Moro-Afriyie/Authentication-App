@@ -18,15 +18,20 @@ const EditProfile: React.FunctionComponent = () => {
       bio: auth()?.bio || "",
       email: auth()?.email || "",
       phoneNumber: auth()?.phoneNumber || "",
-      photo: auth()?.photo || "",
+      photo: auth()?.photo,
       password: auth()?.password || "",
     },
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const response = await axios.put(`${BASE_URL}`, values, {
-          headers: { Authorization: authHeader() },
+        console.log("photo: ", values.photo);
+
+        const response = await axios.put(`${BASE_URL}/users`, values, {
+          headers: {
+            Authorization: authHeader(),
+            "Content-Type": "multipart/form-data",
+          },
         });
-        console.log("response: ", response.data.user);
+        // console.log("response: ", response.data.user);
         // update the  authState with the new data from the server
       } catch (error) {
         console.log("error: ", error);
@@ -46,7 +51,7 @@ const EditProfile: React.FunctionComponent = () => {
           <p className="light">Changes will be reflected to every services</p>
         </div>
         <div className="edit-details-info__form">
-          <form onSubmit={formik.handleSubmit}>
+          <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
             <div className="change-photo">
               <label htmlFor="photo">
                 <div
@@ -60,8 +65,11 @@ const EditProfile: React.FunctionComponent = () => {
               </label>
               <p>CHANGE PHOTO</p>
               <input
-                value={formik.values.photo}
-                onChange={formik.handleChange}
+                onChange={(event) => {
+                  if (!event.target.files || event.target.files.length === 0)
+                    return;
+                  formik.setFieldValue("photo", event.target.files[0]);
+                }}
                 type="file"
                 name="photo"
                 id="photo"
