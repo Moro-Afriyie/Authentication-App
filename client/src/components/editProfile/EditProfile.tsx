@@ -14,10 +14,12 @@ const EditProfile: React.FunctionComponent = () => {
   // TODO: handle password and images on the backend side
   const formik = useFormik({
     initialValues: {
-      name: auth()?.name,
-      bio: auth()?.bio,
-      email: auth()?.email,
-      phoneNumber: auth()?.phoneNumber,
+      name: auth()?.name || "",
+      bio: auth()?.bio || "",
+      email: auth()?.email || "",
+      phoneNumber: auth()?.phoneNumber || "",
+      photo: auth()?.photo || "",
+      password: auth()?.password || "",
     },
     onSubmit: async (values, { setSubmitting }) => {
       try {
@@ -57,7 +59,14 @@ const EditProfile: React.FunctionComponent = () => {
                 </div>
               </label>
               <p>CHANGE PHOTO</p>
-              <input type="file" name="photo" id="photo" accept="image/*" />
+              <input
+                value={formik.values.photo}
+                onChange={formik.handleChange}
+                type="file"
+                name="photo"
+                id="photo"
+                accept="image/*"
+              />
             </div>
             <div className="form-control">
               <label htmlFor="name">Name</label>
@@ -108,6 +117,8 @@ const EditProfile: React.FunctionComponent = () => {
                 id="password"
                 name="password"
                 placeholder="Enter your password..."
+                value={formik.values.password}
+                onChange={formik.handleChange}
               />
             </div>
             <button type="submit" className="submit">
