@@ -14,6 +14,7 @@ const storage = new CloudinaryStorage({
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		resource_type: 'auto',
+		folder: 'authentication-app',
 	},
 });
 

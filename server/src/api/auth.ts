@@ -12,7 +12,7 @@ import { Strategy as TwitterStrategy } from 'passport-twitter';
 import { UserRepository } from './users';
 import { checkIsLoggedIn } from '../middlewares/jwtAuth';
 import * as bcrypt from 'bcrypt';
-import Joi = require('joi');
+import Joi from 'joi';
 
 const RegisterationSchema = Joi.object({
 	name: Joi.string().min(3).max(30).required(),

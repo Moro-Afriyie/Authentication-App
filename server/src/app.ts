@@ -1,6 +1,6 @@
 import { APIError } from './error';
 import handleErrors from './middlewares/error';
-import * as express from 'express';
+import express from 'express';
 import helmet from 'helmet';
 import cors = require('cors');
 import { createAPI } from './api';
