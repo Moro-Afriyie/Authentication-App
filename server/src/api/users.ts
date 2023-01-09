@@ -7,6 +7,7 @@ import { APIError } from '../error';
 import { checkIsLoggedIn } from '../middlewares/jwtAuth';
 import Joi from 'joi';
 import * as bcrypt from 'bcrypt';
+import { asyncMiddleware } from '../middlewares/async';
 
 const router: Router = Router();
 
@@ -20,7 +21,7 @@ const userSchema = Joi.object({
 		.uri({ scheme: ['http', 'https'] })
 		.allow(''),
 	phoneNumber: Joi.string()
-		.regex(/^\+\d{2}\d{9,}$/)
+		.regex(/^\+[0-9]{1,3}\.[0-9]{4,14}(?:x.+)?$/)
 		.min(7)
 		.max(15)
 		.allow('')
@@ -33,47 +34,51 @@ const userSchema = Joi.object({
 
 export const UserRepository = AppDataSource.getRepository(User);
 
-router.get('/', async (req, res) => {
-	const users = await UserRepository.find();
-	res.status(200).json({ success: true, data: users });
-});
+router.get(
+	'/',
+	asyncMiddleware(async (req, res) => {
+		const users = await UserRepository.find();
+		res.status(200).json({ success: true, data: users });
+	})
+);
 
-router.put('/', checkIsLoggedIn, storageMiddleware.single('photo'), async (req, res) => {
-	const { error } = userSchema.validate(req.body);
+router.put(
+	'/',
+	checkIsLoggedIn,
+	storageMiddleware.single('photo'),
+	asyncMiddleware(async (req, res) => {
+		const { error } = userSchema.validate(req.body);
 
-	console.log('error: ', error);
+		if (error) {
+			throw new APIError(
+				'BAD REQUEST',
+				HttpStatusCode.BAD_REQUEST,
+				true,
+				error.message.replace(/\"/g, '')
+			);
+		}
 
-	if (error) {
-		res.status(HttpStatusCode.BAD_REQUEST);
-		return res.json({
-			date: Date.now(),
-			message: error.message.replace(/\"/g, ''),
-			error: true,
-		});
-	}
+		const user = await UserRepository.findOneBy({ id: req.user.id });
 
-	const user = await UserRepository.findOneBy({ id: req.user.id });
+		if (!user) {
+			throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'User not found');
+		}
 
-	if (!user) {
-		throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'User not found');
-	}
+		const file = req.file;
+		if (file) {
+			req.body['photo'] = file.path;
+		}
 
-	const file = req.file;
-	if (file) {
-		req.body['photo'] = file.path;
-	}
+		if (req.body.password) {
+			const hashedPassword = bcrypt.hash(req.body.password, 10);
+			req.body['password'] = hashedPassword;
+		}
 
-	if (req.body.password) {
-		const hashedPassword = await bcrypt.hash(req.body.password, 10);
-		req.body['password'] = hashedPassword;
-	}
-
-	console.log('old user: ', user);
-	Object.assign(user, req.body);
-	console.log('new user: ', user);
-	// const updatedUser = await UserRepository.save(user);
-	// res.json({ message: 'details updated successfully', succes: true, user: updatedUser });
-});
+		Object.assign(user, req.body);
+		const updatedUser = await UserRepository.save(user);
+		res.json({ message: 'details updated successfully', succes: true, user: updatedUser });
+	})
+);
 
 // just to verify the users will delete it later
 router.get('/hello', checkIsLoggedIn, (req, res) => {

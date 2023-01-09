@@ -13,6 +13,7 @@ import { UserRepository } from './users';
 import { checkIsLoggedIn } from '../middlewares/jwtAuth';
 import * as bcrypt from 'bcrypt';
 import Joi from 'joi';
+import { asyncMiddleware } from '../middlewares/async';
 
 const RegisterationSchema = Joi.object({
 	name: Joi.string().min(3).max(30).required(),
@@ -182,7 +183,6 @@ passport.use(
 			callbackURL: '/auth/facebook/callback',
 		},
 		async function (accessToken, refreshToken, profile, done) {
-			console.log('profile: ', profile);
 			// facebook doesn't normally come with email so i will search by providerId
 			let user = await UserRepository.findOneBy({ providerId: profile.id });
 
@@ -244,110 +244,116 @@ router.get('/login/success', checkIsLoggedIn, (req: Request, res: Response) => {
 	res.json({ message: 'login success', success: true, user: req.user, token });
 });
 
-router.post('/register', async (req, res) => {
-	const { email, password, name } = req.body;
-	const { error } = RegisterationSchema.validate(req.body);
-	if (error) {
-		res.status(HttpStatusCode.BAD_REQUEST);
-		return res.json({
-			date: Date.now(),
-			message: error.message.replace(/\"/g, ''),
-			error: true,
-		});
-	}
-
-	let user = await UserRepository.findOneBy({ email });
-
-	if (user) {
-		res.status(HttpStatusCode.BAD_REQUEST);
-		return res.json({
-			date: Date.now(),
-			message: `user already exitsts ${
-				user.provider ? `and registered using ${user.provider}` : ''
-			}.please login to continue`,
-			error: true,
-		});
-	}
-
-	bcrypt.hash(password, 10, async (err, hashedPassword) => {
-		if (err) {
-			res.status(HttpStatusCode.INTERNAL_SERVER);
-			return res.json({
-				date: Date.now(),
-				message: err.message,
-				error: true,
-			});
+router.post(
+	'/register',
+	asyncMiddleware(async (req, res) => {
+		const { email, password, name } = req.body;
+		const { error } = RegisterationSchema.validate(req.body);
+		if (error) {
+			throw new APIError(
+				'BAD REQUEST',
+				HttpStatusCode.BAD_REQUEST,
+				true,
+				error.message.replace(/\"/g, '')
+			);
 		}
 
-		user = await UserRepository.save({
-			name,
-			email,
-			password: hashedPassword,
+		let user = await UserRepository.findOneBy({ email });
+
+		if (user) {
+			throw new APIError(
+				'BAD REQUEST',
+				HttpStatusCode.BAD_REQUEST,
+				true,
+				`user already exitsts ${
+					user.provider ? `and registered using ${user.provider}` : ''
+				}.please login to continue`
+			);
+		}
+
+		bcrypt.hash(password, 10, async (err, hashedPassword) => {
+			if (err) {
+				res.status(HttpStatusCode.INTERNAL_SERVER);
+				return res.json({
+					date: Date.now(),
+					message: err.message,
+					error: true,
+				});
+			}
+
+			user = await UserRepository.save({
+				name,
+				email,
+				password: hashedPassword,
+			});
+			delete user.provider;
+			delete user.password;
+
+			const token = generateAccessToken(user);
+			res.status(201).json({
+				message: 'account created succesfully',
+				success: true,
+				user,
+				token: token,
+			});
 		});
+	})
+);
+
+router.post(
+	'/login',
+	asyncMiddleware(async (req: Request, res: Response) => {
+		const { email, password } = req.body;
+		const { error } = loginSchema.validate(req.body);
+		if (error) {
+			throw new APIError(
+				'BAD REQUEST',
+				HttpStatusCode.BAD_REQUEST,
+				true,
+				error.message.replace(/\"/g, '')
+			);
+		}
+		let user = await UserRepository.findOneBy({ email });
+
+		if (!user) {
+			throw new APIError(
+				'NOT FOUND',
+				HttpStatusCode.NOT_FOUND,
+				true,
+				'account not found. please sign up'
+			);
+		}
+
+		if (user.provider && !user.password) {
+			throw new APIError(
+				'BAD REQUEST',
+				HttpStatusCode.BAD_REQUEST,
+				true,
+				`user registered using ${user.provider} .please login to continue`
+			);
+		}
+
+		const isValidPassword = bcrypt.compareSync(password, user.password);
+		if (!isValidPassword) {
+			throw new APIError(
+				'BAD REQUEST',
+				HttpStatusCode.BAD_REQUEST,
+				true,
+				`invalid email or password`
+			);
+		}
+
 		delete user.provider;
 		delete user.password;
-
 		const token = generateAccessToken(user);
-		res.status(201).json({
-			message: 'account created succesfully',
+
+		res.status(200).json({
+			message: 'loggin success',
 			success: true,
 			user,
 			token: token,
 		});
-	});
-});
-
-router.post('/login', async (req: Request, res: Response) => {
-	const { email, password } = req.body;
-	const { error } = loginSchema.validate(req.body);
-	if (error) {
-		res.status(HttpStatusCode.BAD_REQUEST);
-		return res.json({
-			date: Date.now(),
-			message: error.message.replace(/\"/g, ''),
-			error: true,
-		});
-	}
-	let user = await UserRepository.findOneBy({ email });
-
-	if (!user) {
-		res.status(HttpStatusCode.NOT_FOUND);
-		return res.json({
-			date: Date.now(),
-			message: 'account not found. please sign up',
-			error: true,
-		});
-	}
-
-	if (user.provider && !user.password) {
-		res.status(HttpStatusCode.BAD_REQUEST);
-		return res.json({
-			date: Date.now(),
-			message: `user registered using ${user.provider} .please login to continue`,
-			error: true,
-		});
-	}
-
-	const isValidPassword = bcrypt.compareSync(password, user.password);
-	if (!isValidPassword) {
-		res.status(HttpStatusCode.BAD_REQUEST);
-		return res.json({
-			date: Date.now(),
-			message: `invalid email or password`,
-			error: true,
-		});
-	}
-
-	delete user.provider;
-	delete user.password;
-	const token = generateAccessToken(user);
-
-	res.status(200).json({
-		message: 'loggin success',
-		success: true,
-		user,
-		token: token,
-	});
-});
+	})
+);
 
 export default { path: '/auth', router };
