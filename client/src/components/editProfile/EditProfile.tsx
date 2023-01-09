@@ -6,6 +6,32 @@ import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import axios from "axios";
 import { useFormik } from "formik";
 import { BASE_URL } from "../../utils/config";
+import * as Yup from "yup";
+import Loader from "../_shared/Loader";
+
+const EditProfileSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(3, "name should have a minimum of 5 characters")
+    .max(30, "name should have a maximum of 20 characters")
+    .nullable()
+    .strict(),
+  phoneNumber: Yup.string()
+    .matches(/^\+\d{2}\d{9,}$/, {
+      excludeEmptyString: true,
+      message:
+        "phone number should start with a plus sign, followed by the country code and national number",
+    })
+    .min(7, { excludeEmptyString: true })
+    .max(15, { excludeEmptyString: true })
+    .nullable()
+    .notRequired(),
+  email: Yup.string().email("Invalid email").nullable().strict(),
+  password: Yup.string()
+    .min(5, "password should have a minimum of 5 characters")
+    .max(20, "password should have a maximum of 20 characters")
+    .nullable()
+    .strict(),
+});
 
 const EditProfile: React.FunctionComponent = () => {
   const auth = useAuthUser();
@@ -20,6 +46,7 @@ const EditProfile: React.FunctionComponent = () => {
       photo: auth()?.photo,
       password: auth()?.password || "",
     },
+    validationSchema: EditProfileSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
         console.log("photo: ", values.photo);
@@ -75,17 +102,31 @@ const EditProfile: React.FunctionComponent = () => {
                 accept="image/*"
               />
             </div>
-            <div className="form-control">
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                name="name"
-                id="name"
-                placeholder="Enter your name..."
-                onChange={formik.handleChange}
-                value={formik.values.name}
-              />
+            <div>
+              <div
+                className="form-control"
+                style={{
+                  border:
+                    formik.errors.email && formik.touched.email
+                      ? "1px solid red"
+                      : "",
+                }}
+              >
+                <label htmlFor="name">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  placeholder="Enter your name..."
+                  onChange={formik.handleChange}
+                  value={formik.values.name}
+                />
+              </div>
+              {formik.errors.name && formik.touched.name ? (
+                <div className="form__error">{formik.errors.name}</div>
+              ) : null}
             </div>
+
             <div className="form-control">
               <label htmlFor="bio">Bio</label>
               <textarea
