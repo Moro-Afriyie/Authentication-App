@@ -3,7 +3,7 @@ import "./EditProfile.scss";
 import avatar from "../../assets/avatar.png";
 import { Link } from "react-router-dom";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useFormik } from "formik";
 import { BASE_URL } from "../../utils/config";
 import * as Yup from "yup";
@@ -53,18 +53,19 @@ const EditProfile: React.FunctionComponent = () => {
     validationSchema: EditProfileSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        console.log("photo: ", values.photo);
-
+        setSubmitting(true);
         const response = await axios.put(`${BASE_URL}/users`, values, {
           headers: {
             Authorization: authHeader(),
             "Content-Type": "multipart/form-data",
           },
         });
+        setSubmitting(false);
         console.log("response: ", response.data.user);
         // update the  authState with the new data from the server
       } catch (error) {
         console.log("error: ", error);
+        setSubmitting(false);
       }
     },
   });
@@ -217,7 +218,7 @@ const EditProfile: React.FunctionComponent = () => {
               ) : null}
             </div>
             <button type="submit" className="submit">
-              Save
+              {formik.isSubmitting ? <Loader /> : "Save"}
             </button>
           </form>
         </div>
