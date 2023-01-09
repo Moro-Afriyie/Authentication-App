@@ -21,7 +21,7 @@ const userSchema = Joi.object({
 		.uri({ scheme: ['http', 'https'] })
 		.allow(''),
 	phoneNumber: Joi.string()
-		.regex(/^\+[0-9]{1,3}\.[0-9]{4,14}(?:x.+)?$/)
+		.regex(/^\+\d{2}\d{9,}$/)
 		.min(7)
 		.max(15)
 		.allow('')
@@ -60,6 +60,13 @@ router.put(
 
 		const user = await UserRepository.findOneBy({ id: req.user.id });
 
+		if (req.body.email && req.body.email.toLowerCase() !== user.email.toLowerCase()) {
+			const user = await UserRepository.findOneBy({ email: req.body.email });
+			if (user) {
+				throw new APIError('BAD REQUEST', HttpStatusCode.BAD_REQUEST, true, 'email already exits');
+			}
+		}
+
 		if (!user) {
 			throw new APIError('NOT FOUND', HttpStatusCode.NOT_FOUND, true, 'User not found');
 		}
@@ -70,11 +77,12 @@ router.put(
 		}
 
 		if (req.body.password) {
-			const hashedPassword = bcrypt.hash(req.body.password, 10);
+			const hashedPassword = await bcrypt.hash(req.body.password, 10);
 			req.body['password'] = hashedPassword;
 		}
 
 		Object.assign(user, req.body);
+
 		const updatedUser = await UserRepository.save(user);
 		res.json({ message: 'details updated successfully', succes: true, user: updatedUser });
 	})
