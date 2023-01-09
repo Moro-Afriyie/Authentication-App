@@ -13,7 +13,7 @@ import Loader from "../_shared/Loader";
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
     .min(3, "name should have a minimum of 5 characters")
-    .max(30, "name should have a maximum of 20 characters")
+    .max(30, "name should have a maximum of 30 characters")
     .required("name is required"),
   email: Yup.string().email("Invalid email").required("Email is Required"),
   password: Yup.string()

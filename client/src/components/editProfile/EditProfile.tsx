@@ -12,9 +12,13 @@ import Loader from "../_shared/Loader";
 const EditProfileSchema = Yup.object().shape({
   name: Yup.string()
     .min(3, "name should have a minimum of 5 characters")
-    .max(30, "name should have a maximum of 20 characters")
+    .max(30, "name should have a maximum of 30 characters")
     .nullable()
     .strict(),
+  bio: Yup.string()
+    .max(500, "bio can be only 500 characters long")
+    .nullable()
+    .notRequired(),
   phoneNumber: Yup.string()
     .matches(/^\+\d{2}\d{9,}$/, {
       excludeEmptyString: true,
@@ -103,15 +107,7 @@ const EditProfile: React.FunctionComponent = () => {
               />
             </div>
             <div>
-              <div
-                className="form-control"
-                style={{
-                  border:
-                    formik.errors.email && formik.touched.email
-                      ? "1px solid red"
-                      : "",
-                }}
-              >
+              <div className="form-control">
                 <label htmlFor="name">Name</label>
                 <input
                   type="text"
@@ -120,6 +116,12 @@ const EditProfile: React.FunctionComponent = () => {
                   placeholder="Enter your name..."
                   onChange={formik.handleChange}
                   value={formik.values.name}
+                  style={{
+                    border:
+                      formik.errors.name && formik.touched.name
+                        ? "1px solid red"
+                        : "",
+                  }}
                 />
               </div>
               {formik.errors.name && formik.touched.name ? (
@@ -127,47 +129,92 @@ const EditProfile: React.FunctionComponent = () => {
               ) : null}
             </div>
 
-            <div className="form-control">
-              <label htmlFor="bio">Bio</label>
-              <textarea
-                name="bio"
-                id="bio"
-                placeholder="Enter your bio..."
-                onChange={formik.handleChange}
-                value={formik.values.bio}
-              ></textarea>
+            <div>
+              <div className="form-control">
+                <label htmlFor="bio">Bio</label>
+                <textarea
+                  name="bio"
+                  id="bio"
+                  placeholder="Enter your bio..."
+                  onChange={formik.handleChange}
+                  value={formik.values.bio}
+                  style={{
+                    border:
+                      formik.errors.bio && formik.touched.bio
+                        ? "1px solid red"
+                        : "",
+                  }}
+                ></textarea>
+              </div>
+              {formik.errors.bio && formik.touched.bio ? (
+                <div className="form__error">{formik.errors.bio}</div>
+              ) : null}
             </div>
-            <div className="form-control">
-              <label htmlFor="phone">Phone</label>
-              <input
-                type="text"
-                name="phoneNumber"
-                id="phoneNumber"
-                placeholder="Enter your phone..."
-                onChange={formik.handleChange}
-                value={formik.values.phoneNumber}
-              />
+            <div>
+              <div className="form-control">
+                <label htmlFor="phone">Phone</label>
+                <input
+                  type="text"
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  placeholder="Enter your phone..."
+                  onChange={formik.handleChange}
+                  value={formik.values.phoneNumber}
+                  style={{
+                    border:
+                      formik.errors.phoneNumber && formik.touched.phoneNumber
+                        ? "1px solid red"
+                        : "",
+                  }}
+                />
+              </div>
+              {formik.errors.phoneNumber && formik.touched.phoneNumber ? (
+                <div className="form__error">{formik.errors.phoneNumber}</div>
+              ) : null}
             </div>
-            <div className="form-control">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formik.values.email}
-                readOnly
-              />
+            <div>
+              <div className="form-control">
+                <label htmlFor="email">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  style={{
+                    border:
+                      formik.errors.email && formik.touched.email
+                        ? "1px solid red"
+                        : "",
+                  }}
+                />
+              </div>
+              {formik.errors.email && formik.touched.email ? (
+                <div className="form__error">{formik.errors.email}</div>
+              ) : null}
             </div>
-            <div className="form-control">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Enter your password..."
-                value={formik.values.password}
-                onChange={formik.handleChange}
-              />
+
+            <div>
+              <div className="form-control">
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Enter your password..."
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  style={{
+                    border:
+                      formik.errors.password && formik.touched.password
+                        ? "1px solid red"
+                        : "",
+                  }}
+                />
+              </div>
+              {formik.errors.password && formik.touched.password ? (
+                <div className="form__error">{formik.errors.password}</div>
+              ) : null}
             </div>
             <button type="submit" className="submit">
               Save
