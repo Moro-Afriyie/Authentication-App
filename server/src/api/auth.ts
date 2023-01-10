@@ -241,7 +241,11 @@ router.get('/login/failed', (req: Request, res: Response) => {
 
 router.get('/login/success', checkIsLoggedIn, (req: Request, res: Response) => {
 	const token = generateAccessToken(req.user);
-	res.json({ message: 'login success', success: true, user: req.user, token });
+	const user = req.user;
+	delete user.provider;
+	delete user.providerId;
+	delete user.password;
+	res.json({ message: 'login success', success: true, user: user, token });
 });
 
 router.post(
@@ -288,6 +292,7 @@ router.post(
 			});
 			delete user.provider;
 			delete user.password;
+			delete user.providerId;
 
 			const token = generateAccessToken(user);
 			res.status(201).json({
@@ -345,6 +350,7 @@ router.post(
 
 		delete user.provider;
 		delete user.password;
+		delete user.providerId;
 		const token = generateAccessToken(user);
 
 		res.status(200).json({

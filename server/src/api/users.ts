@@ -79,11 +79,17 @@ router.put(
 		if (req.body.password) {
 			const hashedPassword = await bcrypt.hash(req.body.password, 10);
 			req.body['password'] = hashedPassword;
+			Object.assign(user, req.body);
+		} else {
+			delete req.body.password;
+			Object.assign(user, req.body);
 		}
 
-		Object.assign(user, req.body);
-
 		const updatedUser = await UserRepository.save(user);
+		console.log('updated user: ', updatedUser);
+		delete updatedUser.provider;
+		delete updatedUser.password;
+		delete updatedUser.providerId;
 		res.json({ message: 'details updated successfully', succes: true, user: updatedUser });
 	})
 );
