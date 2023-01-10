@@ -53,8 +53,6 @@ const EditProfile: React.FunctionComponent = () => {
   const currentUser = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
-  console.log("current user: ", currentUser);
-
   const showSnackbar = (success: boolean, message: string) => {
     setSnackbar({
       message,
