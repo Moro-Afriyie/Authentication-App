@@ -53,6 +53,7 @@ const NavBar: React.FunctionComponent = () => {
                 onClick={() => {
                   dispatch(removeUser);
                   Cookies.remove("token");
+                  Cookies.remove("user");
                   navigate("/login");
                 }}
               >
