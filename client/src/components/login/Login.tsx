@@ -10,6 +10,8 @@ import { BASE_URL } from "../../utils/config";
 import ErrorMessage from "../_shared/ErrorMessage";
 import * as Yup from "yup";
 import Loader from "../_shared/Loader";
+import { useAppDispatch } from "../../utils/store/useRedux";
+import { updateUser } from "../../utils/store/reducers/userSlice";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is Required"),
@@ -25,6 +27,7 @@ const Login: React.FunctionComponent = () => {
   const signIn = useSignIn();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = React.useState("");
+  const dispatch = useAppDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -48,6 +51,7 @@ const Login: React.FunctionComponent = () => {
           tokenType: "Bearer",
           authState: res.data.user,
         });
+        dispatch(updateUser(res.data.user));
         navigate("/profile/username");
       } catch (error) {
         setSubmitting(false);
@@ -80,6 +84,8 @@ const Login: React.FunctionComponent = () => {
         tokenType: "Bearer",
         authState: res.data.user,
       });
+      console.log("user: ", res.data.user);
+      dispatch(updateUser(res.data.user));
       navigate("/profile/username");
     } catch (error) {
       if (error instanceof AxiosError && error?.response?.data) {

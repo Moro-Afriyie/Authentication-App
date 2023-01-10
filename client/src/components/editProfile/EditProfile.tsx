@@ -9,6 +9,8 @@ import { BASE_URL } from "../../utils/config";
 import * as Yup from "yup";
 import Loader from "../_shared/Loader";
 import SnackBar from "../_shared/SnackBar";
+import { useAppDispatch, useAppSelector } from "../../utils/store/useRedux";
+import { updateUser } from "../../utils/store/reducers/userSlice";
 
 const EditProfileSchema = Yup.object().shape({
   name: Yup.string()
@@ -45,10 +47,11 @@ interface ISnackbarState {
 }
 
 const EditProfile: React.FunctionComponent = () => {
-  const auth = useAuthUser();
   const authHeader = useAuthHeader();
   const navigate = useNavigate();
   const [snackbar, setSnackbar] = React.useState<ISnackbarState | null>(null);
+  const currentUser = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   const showSnackbar = (success: boolean, message: string) => {
     setSnackbar({
@@ -64,12 +67,12 @@ const EditProfile: React.FunctionComponent = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: auth()?.name || "",
-      bio: auth()?.bio || "",
-      email: auth()?.email || "",
-      phoneNumber: auth()?.phoneNumber || "",
-      photo: auth()?.photo,
-      password: auth()?.password || "",
+      name: currentUser.name || "",
+      bio: currentUser.bio || "",
+      email: currentUser.email || "",
+      phoneNumber: currentUser.phoneNumber || "",
+      photo: currentUser.photo,
+      password: currentUser.password || "",
     },
     validationSchema: EditProfileSchema,
     onSubmit: async (values, { setSubmitting }) => {
@@ -86,7 +89,8 @@ const EditProfile: React.FunctionComponent = () => {
           showSnackbar(false, response.data.message);
           return;
         }
-        console.log("response: ", response.data.user);
+
+        dispatch(updateUser(response.data.user));
         showSnackbar(true, response.data.message);
         // update the  authState with the new data from the server
       } catch (error) {
@@ -129,7 +133,9 @@ const EditProfile: React.FunctionComponent = () => {
               <label htmlFor="photo">
                 <div
                   className="photo-icon"
-                  style={{ backgroundImage: `url(${auth()?.photo || avatar})` }}
+                  style={{
+                    backgroundImage: `url(${currentUser.photo || avatar})`,
+                  }}
                 >
                   <div className="icon">
                     <span className="material-icons">photo_camera</span>

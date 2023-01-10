@@ -2,10 +2,11 @@ import * as React from "react";
 import "./ProfileDetails.scss";
 import avatar from "../../assets/avatar.png";
 import { Link } from "react-router-dom";
-import { useAuthUser } from "react-auth-kit";
+import { useAppSelector } from "../../utils/store/useRedux";
 
 const ProfileDetails: React.FunctionComponent = () => {
-  const auth = useAuthUser();
+  const currentUser = useAppSelector((state) => state.user);
+  console.log("currentUser: ", currentUser);
 
   return (
     <div className="profile-details-box">
@@ -26,24 +27,24 @@ const ProfileDetails: React.FunctionComponent = () => {
         <li>
           <p className="left-text">photo</p>
           <div className="image">
-            <img src={auth()?.photo || avatar} alt="profile image" />
+            <img src={currentUser.photo || avatar} alt="profile image" />
           </div>
         </li>
         <li>
           <p className="left-text">Name</p>
-          <p className="right-text">{auth()?.name}</p>
+          <p className="right-text">{currentUser.name}</p>
         </li>
         <li>
           <p className="left-text">Bio</p>
-          <p className="right-text">{auth()?.bio}</p>
+          <p className="right-text">{currentUser.bio}</p>
         </li>
         <li>
           <p className="left-text">phone</p>
-          <p className="right-text">{auth()?.phoneNumber}</p>
+          <p className="right-text">{currentUser.phoneNumber}</p>
         </li>
         <li>
           <p className="left-text">Email</p>
-          <p className="right-text">{auth()?.email}</p>
+          <p className="right-text">{currentUser.email}</p>
         </li>
         <li className="password">
           <p className="left-text">Password</p>
