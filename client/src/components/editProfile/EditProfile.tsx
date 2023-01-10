@@ -1,7 +1,7 @@
 import * as React from "react";
 import "./EditProfile.scss";
 import avatar from "../../assets/avatar.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import axios, { AxiosError } from "axios";
 import { useFormik } from "formik";
@@ -40,6 +40,7 @@ const EditProfileSchema = Yup.object().shape({
 const EditProfile: React.FunctionComponent = () => {
   const auth = useAuthUser();
   const authHeader = useAuthHeader();
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -65,6 +66,11 @@ const EditProfile: React.FunctionComponent = () => {
         // update the  authState with the new data from the server
       } catch (error) {
         console.log("error: ", error);
+        if (error instanceof AxiosError && error?.response?.status == 401) {
+          navigate(
+            "/login?error=your session has expired please login to continue"
+          );
+        }
         setSubmitting(false);
       }
     },
