@@ -6,7 +6,6 @@ import { useAppSelector } from "../../utils/store/useRedux";
 
 const ProfileDetails: React.FunctionComponent = () => {
   const currentUser = useAppSelector((state) => state.user);
-  console.log("currentUser: ", currentUser);
 
   return (
     <div className="profile-details-box">

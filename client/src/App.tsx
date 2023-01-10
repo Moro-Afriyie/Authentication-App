@@ -7,43 +7,29 @@ import { Routes, Route, Navigate, Link } from "react-router-dom";
 import ProfileDetails from "./components/profileDetails/ProfileDetails";
 import EditProfile from "./components/editProfile/EditProfile";
 import { RequireAuth } from "react-auth-kit";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <div className="container">
       <Routes>
-        <Route
+        {/* <Route
           path="/profile"
           element={
             <RequireAuth loginPath={"/login"}>
               <Profile />
             </RequireAuth>
           }
+        > */}
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute authenticationPath="/login" outlet={<Profile />} />
+          }
         >
-          <Route
-            index
-            element={
-              <RequireAuth loginPath={"/login"}>
-                <ProfileDetails />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="username"
-            element={
-              <RequireAuth loginPath={"/login"}>
-                <ProfileDetails />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="settings"
-            element={
-              <RequireAuth loginPath={"/login"}>
-                <EditProfile />
-              </RequireAuth>
-            }
-          />
+          <Route index element={<ProfileDetails />} />
+          <Route path="username" element={<ProfileDetails />} />
+          <Route path="settings" element={<EditProfile />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />

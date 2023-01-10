@@ -11,6 +11,7 @@ import Loader from "../_shared/Loader";
 import SnackBar from "../_shared/SnackBar";
 import { useAppDispatch, useAppSelector } from "../../utils/store/useRedux";
 import { updateUser } from "../../utils/store/reducers/userSlice";
+import Cookies from "js-cookie";
 
 const EditProfileSchema = Yup.object().shape({
   name: Yup.string()
@@ -47,11 +48,12 @@ interface ISnackbarState {
 }
 
 const EditProfile: React.FunctionComponent = () => {
-  const authHeader = useAuthHeader();
   const navigate = useNavigate();
   const [snackbar, setSnackbar] = React.useState<ISnackbarState | null>(null);
   const currentUser = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
+
+  console.log("current user: ", currentUser);
 
   const showSnackbar = (success: boolean, message: string) => {
     setSnackbar({
@@ -80,7 +82,7 @@ const EditProfile: React.FunctionComponent = () => {
         setSubmitting(true);
         const response = await axios.put(`${BASE_URL}/users`, values, {
           headers: {
-            Authorization: authHeader(),
+            Authorization: `Bearer ${Cookies.get("token")}`,
             "Content-Type": "multipart/form-data",
           },
         });

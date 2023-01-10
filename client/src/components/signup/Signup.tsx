@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import Loader from "../_shared/Loader";
 import { useAppDispatch } from "../../utils/store/useRedux";
 import { updateUser } from "../../utils/store/reducers/userSlice";
+import Cookies from "js-cookie";
 
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
@@ -45,6 +46,7 @@ const SignUp: React.FunctionComponent = () => {
           return;
         }
         setSubmitting(false);
+        Cookies.set("token", res.data.token);
         dispatch(updateUser(res.data.user));
         navigate("/profile/username");
       } catch (error) {

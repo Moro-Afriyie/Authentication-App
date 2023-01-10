@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import Loader from "../_shared/Loader";
 import { useAppDispatch } from "../../utils/store/useRedux";
 import { updateUser } from "../../utils/store/reducers/userSlice";
+import Cookies from "js-cookie";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is Required"),
@@ -44,6 +45,7 @@ const Login: React.FunctionComponent = () => {
           return;
         }
         setSubmitting(false);
+        Cookies.set("token", res.data.token);
         dispatch(updateUser(res.data.user));
         navigate("/profile/username");
       } catch (error) {
@@ -71,6 +73,7 @@ const Login: React.FunctionComponent = () => {
         return;
       }
       formik.setSubmitting(false);
+      Cookies.set("token", res.data.token);
       dispatch(updateUser(res.data.user));
       navigate("/profile/username");
     } catch (error) {
