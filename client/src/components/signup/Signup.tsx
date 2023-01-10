@@ -5,10 +5,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../utils/config";
 import { useFormik } from "formik";
 import axios, { AxiosError } from "axios";
-import { useSignIn } from "react-auth-kit";
 import ErrorMessage from "../_shared/ErrorMessage";
 import * as Yup from "yup";
 import Loader from "../_shared/Loader";
+import { useAppDispatch } from "../../utils/store/useRedux";
+import { updateUser } from "../../utils/store/reducers/userSlice";
 
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
@@ -23,7 +24,7 @@ const SignUpSchema = Yup.object().shape({
 });
 
 const SignUp: React.FunctionComponent = () => {
-  const signIn = useSignIn();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = React.useState("");
 
@@ -44,12 +45,7 @@ const SignUp: React.FunctionComponent = () => {
           return;
         }
         setSubmitting(false);
-        signIn({
-          token: res.data.token,
-          expiresIn: 3600,
-          tokenType: "Bearer",
-          authState: res.data.user,
-        });
+        dispatch(updateUser(res.data.user));
         navigate("/profile/username");
       } catch (error) {
         setSubmitting(false);

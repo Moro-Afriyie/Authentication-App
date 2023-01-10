@@ -2,12 +2,13 @@ import * as React from "react";
 import logo from "../../assets/devchallenges.svg";
 import avatar from "../../assets/avatar.png";
 import "./NavBar.scss";
-import { useAuthUser } from "react-auth-kit";
 import { useSignOut } from "react-auth-kit";
+import { useAppDispatch, useAppSelector } from "../../utils/store/useRedux";
 
 const NavBar: React.FunctionComponent = () => {
   const [menu, setMenu] = React.useState(false);
-  const auth = useAuthUser();
+  const currentUser = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
   const signOut = useSignOut();
 
   const handleShowDropdownMenu = () => {
@@ -24,9 +25,9 @@ const NavBar: React.FunctionComponent = () => {
           onClick={handleShowDropdownMenu}
         >
           <div className="avatar">
-            <img src={auth()?.photo || avatar} alt="profile picture" />
+            <img src={currentUser.photo || avatar} alt="profile picture" />
           </div>
-          <p>{auth()?.name}</p>
+          <p>{currentUser.name}</p>
           {menu ? (
             <i className="fa fa-caret-up" aria-hidden="true"></i>
           ) : (

@@ -24,7 +24,6 @@ const LoginSchema = Yup.object().shape({
 const Login: React.FunctionComponent = () => {
   const location = useLocation();
   const { code, error } = queryString.parse(location.search);
-  const signIn = useSignIn();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = React.useState("");
   const dispatch = useAppDispatch();
@@ -45,12 +44,6 @@ const Login: React.FunctionComponent = () => {
           return;
         }
         setSubmitting(false);
-        signIn({
-          token: res.data.token,
-          expiresIn: 3600,
-          tokenType: "Bearer",
-          authState: res.data.user,
-        });
         dispatch(updateUser(res.data.user));
         navigate("/profile/username");
       } catch (error) {
@@ -78,13 +71,6 @@ const Login: React.FunctionComponent = () => {
         return;
       }
       formik.setSubmitting(false);
-      signIn({
-        token: res.data.token,
-        expiresIn: 3600,
-        tokenType: "Bearer",
-        authState: res.data.user,
-      });
-      console.log("user: ", res.data.user);
       dispatch(updateUser(res.data.user));
       navigate("/profile/username");
     } catch (error) {

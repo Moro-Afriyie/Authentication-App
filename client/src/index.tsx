@@ -4,28 +4,16 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import { AuthProvider } from "react-auth-kit";
 import { Provider } from "react-redux";
 import { store } from "./utils/store/store";
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthProvider
-      authType={"cookie"}
-      authName={"_auth"}
-      cookieDomain={window.location.hostname}
-      cookieSecure={
-        process.env.NODE_ENV === "development"
-          ? window.location.protocol === "http:"
-          : window.location.protocol === "https:"
-      }
-    >
-      <Provider store={store}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </Provider>
-    </AuthProvider>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
