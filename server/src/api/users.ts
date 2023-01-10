@@ -86,7 +86,7 @@ router.put(
 		}
 
 		const updatedUser = await UserRepository.save(user);
-		console.log('updated user: ', updatedUser);
+
 		delete updatedUser.provider;
 		delete updatedUser.password;
 		delete updatedUser.providerId;
