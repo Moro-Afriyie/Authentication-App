@@ -5,6 +5,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "react-auth-kit";
+import { Provider } from "react-redux";
+import { store } from "./utils/store/store";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,9 +20,11 @@ ReactDOM.render(
           : window.location.protocol === "https:"
       }
     >
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
     </AuthProvider>
   </React.StrictMode>,
   document.getElementById("root")
