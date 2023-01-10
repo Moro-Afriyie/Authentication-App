@@ -56,6 +56,10 @@ const EditProfile: React.FunctionComponent = () => {
       success,
       show: true,
     });
+
+    setTimeout(() => {
+      setSnackbar(null);
+    }, 5000);
   };
 
   const formik = useFormik({
@@ -86,13 +90,14 @@ const EditProfile: React.FunctionComponent = () => {
         showSnackbar(true, response.data.message);
         // update the  authState with the new data from the server
       } catch (error) {
-        console.log("error: ", error);
         if (error instanceof AxiosError && error?.response?.status == 401) {
           navigate(
             "/login?error=your session has expired please login to continue"
           );
+        } else {
+          setSubmitting(false);
+          showSnackbar(false, "failed to update user, please try again..");
         }
-        setSubmitting(false);
       }
     },
   });
@@ -101,9 +106,9 @@ const EditProfile: React.FunctionComponent = () => {
     <div className="edit-profile-details-box">
       {snackbar && (
         <SnackBar
-          message={"some random message"}
-          success={true}
-          show={true}
+          message={snackbar.message}
+          success={snackbar.success}
+          show={snackbar.show}
           handleClose={() => {
             setSnackbar(null);
           }}

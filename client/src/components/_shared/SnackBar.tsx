@@ -17,7 +17,11 @@ const SnackBar: React.FunctionComponent<ISnackBarProps> = ({
   handleClose,
 }) => {
   return (
-    <div id="snackbar" className={show ? "show" : ""}>
+    <div
+      id="snackbar"
+      style={{ backgroundColor: success ? "#6ab04c" : "#eb4d4b" }}
+      className={show ? "show" : ""}
+    >
       <div className="left">
         <span className="material-symbols-outlined">
           {success ? ICONS.SUCCESS : ICONS.INFO}

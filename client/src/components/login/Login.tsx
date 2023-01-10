@@ -50,10 +50,12 @@ const Login: React.FunctionComponent = () => {
         });
         navigate("/profile/username");
       } catch (error) {
-        if (error instanceof AxiosError && error?.response?.status == 404)
-          setErrorMessage(error.response.data.message);
-        console.log("error: ", error);
         setSubmitting(false);
+        if (error instanceof AxiosError && error?.response?.data) {
+          setErrorMessage(error.response.data.message);
+          return;
+        }
+        setErrorMessage("an unexpected error occured, please try again");
       }
     },
   });
@@ -80,7 +82,11 @@ const Login: React.FunctionComponent = () => {
       });
       navigate("/profile/username");
     } catch (error) {
-      console.log(error);
+      if (error instanceof AxiosError && error?.response?.data) {
+        setErrorMessage(error.response.data.message);
+        return;
+      }
+      setErrorMessage("an unexpected error occured, please try again");
       formik.setSubmitting(false);
     }
   };

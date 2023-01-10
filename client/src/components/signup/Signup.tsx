@@ -4,7 +4,7 @@ import logo from "../../assets/devchallenges.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../utils/config";
 import { useFormik } from "formik";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useSignIn } from "react-auth-kit";
 import ErrorMessage from "../_shared/ErrorMessage";
 import * as Yup from "yup";
@@ -52,8 +52,12 @@ const SignUp: React.FunctionComponent = () => {
         });
         navigate("/profile/username");
       } catch (error) {
-        console.log("error: ", error);
         setSubmitting(false);
+        if (error instanceof AxiosError && error?.response?.data) {
+          setErrorMessage(error.response.data.message);
+          return;
+        }
+        setErrorMessage("an unexpected error occured, please try again");
       }
     },
   });
