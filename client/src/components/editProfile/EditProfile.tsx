@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 import { BASE_URL } from "../../utils/config";
 import * as Yup from "yup";
 import Loader from "../_shared/Loader";
+import SnackBar from "../_shared/SnackBar";
 
 const EditProfileSchema = Yup.object().shape({
   name: Yup.string()
@@ -37,10 +38,25 @@ const EditProfileSchema = Yup.object().shape({
     .strict(),
 });
 
+interface ISnackbarState {
+  message: string;
+  success: boolean;
+  show: boolean;
+}
+
 const EditProfile: React.FunctionComponent = () => {
   const auth = useAuthUser();
   const authHeader = useAuthHeader();
   const navigate = useNavigate();
+  const [snackbar, setSnackbar] = React.useState<ISnackbarState | null>(null);
+
+  const showSnackbar = (success: boolean, message: string) => {
+    setSnackbar({
+      message,
+      success,
+      show: true,
+    });
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -62,7 +78,12 @@ const EditProfile: React.FunctionComponent = () => {
           },
         });
         setSubmitting(false);
+        if (response.data.error) {
+          showSnackbar(false, response.data.message);
+          return;
+        }
         console.log("response: ", response.data.user);
+        showSnackbar(true, response.data.message);
         // update the  authState with the new data from the server
       } catch (error) {
         console.log("error: ", error);
@@ -78,6 +99,16 @@ const EditProfile: React.FunctionComponent = () => {
 
   return (
     <div className="edit-profile-details-box">
+      {snackbar && (
+        <SnackBar
+          message={"some random message"}
+          success={true}
+          show={true}
+          handleClose={() => {
+            setSnackbar(null);
+          }}
+        />
+      )}
       <Link className="back" to="/profile/username">
         <span className="material-icons">arrow_back_ios_new</span>
         <p>back</p>

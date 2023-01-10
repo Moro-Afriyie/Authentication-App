@@ -3,18 +3,26 @@ import "./Snackbar.scss";
 import { ICONS } from "../../utils/config";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ISnackBarProps {}
+interface ISnackBarProps {
+  message: string;
+  success: boolean;
+  show: boolean;
+  handleClose: () => void;
+}
 
-const SnackBar: React.FunctionComponent<ISnackBarProps> = (props) => {
-  const handleClose = () => {
-    console.log("close snackbar clicked.....");
-  };
-
+const SnackBar: React.FunctionComponent<ISnackBarProps> = ({
+  message,
+  success,
+  show,
+  handleClose,
+}) => {
   return (
-    <div id="snackbar" className="show">
+    <div id="snackbar" className={show ? "show" : ""}>
       <div className="left">
-        <span className="material-symbols-outlined">check_circle</span>
-        <span>Some text some message..</span>
+        <span className="material-symbols-outlined">
+          {success ? ICONS.SUCCESS : ICONS.INFO}
+        </span>
+        <span>{message}</span>
       </div>
       <span
         className="material-symbols-outlined close-btn"

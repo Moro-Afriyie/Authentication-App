@@ -16,7 +16,7 @@ app.use(helmet());
 // setup cross-origin resource header sharing
 app.use(
 	cors({
-		origin: '*',
+		origin: 'http://localhost:3000',
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 		credentials: true,
 	})
