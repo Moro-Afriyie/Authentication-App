@@ -48,7 +48,7 @@ const SignUp: React.FunctionComponent = () => {
         setSubmitting(false);
         Cookies.set("token", res.data.token);
         dispatch(updateUser(res.data.user));
-        navigate("/profile/username");
+        navigate(`/profile/${res.data.user.id}`);
       } catch (error) {
         setSubmitting(false);
         if (error instanceof AxiosError && error?.response?.data) {
