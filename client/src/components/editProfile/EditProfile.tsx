@@ -2,7 +2,6 @@ import * as React from "react";
 import "./EditProfile.scss";
 import avatar from "../../assets/avatar.png";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import axios, { AxiosError } from "axios";
 import { useFormik } from "formik";
 import { BASE_URL } from "../../utils/config";
