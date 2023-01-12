@@ -28,12 +28,12 @@ function App() {
           }
         >
           <Route index element={<ProfileDetails />} />
-          <Route path="username" element={<ProfileDetails />} />
+          <Route path=":id" element={<ProfileDetails />} />
           <Route path="settings" element={<EditProfile />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
-        <Route path="/" element={<Navigate to="/profile/username" replace />} />
+        <Route path="/" element={<Navigate to="/profile/:id" replace />} />
         <Route
           path="*"
           element={

@@ -4,7 +4,6 @@ import logo from "../../assets/devchallenges.svg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import queryString from "query-string";
 import axios, { AxiosError } from "axios";
-import { useSignIn } from "react-auth-kit";
 import { useFormik } from "formik";
 import { BASE_URL } from "../../utils/config";
 import ErrorMessage from "../_shared/ErrorMessage";
@@ -47,7 +46,7 @@ const Login: React.FunctionComponent = () => {
         setSubmitting(false);
         Cookies.set("token", res.data.token);
         dispatch(updateUser(res.data.user));
-        navigate("/profile/username");
+        navigate(`/profile/${res.data.user.id}`);
       } catch (error) {
         setSubmitting(false);
         if (error instanceof AxiosError && error?.response?.data) {
