@@ -6,21 +6,14 @@ import SignUp from "./components/signup/Signup";
 import { Routes, Route, Navigate, Link } from "react-router-dom";
 import ProfileDetails from "./components/profileDetails/ProfileDetails";
 import EditProfile from "./components/editProfile/EditProfile";
-import { RequireAuth } from "react-auth-kit";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { useAppSelector } from "./utils/store/useRedux";
 
 function App() {
+  const currentUser = useAppSelector((state) => state.user);
   return (
     <div className="container">
       <Routes>
-        {/* <Route
-          path="/profile"
-          element={
-            <RequireAuth loginPath={"/login"}>
-              <Profile />
-            </RequireAuth>
-          }
-        > */}
         <Route
           path="/profile"
           element={
@@ -33,7 +26,10 @@ function App() {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
-        <Route path="/" element={<Navigate to="/profile/:id" replace />} />
+        <Route
+          path="/"
+          element={<Navigate to={`/profile/${currentUser.id}`} replace />}
+        />
         <Route
           path="*"
           element={
