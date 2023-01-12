@@ -118,7 +118,7 @@ const EditProfile: React.FunctionComponent = () => {
           }}
         />
       )}
-      <Link className="back" to="/profile/username">
+      <Link className="back" to={`/profile/${currentUser.id}`}>
         <span className="material-icons">arrow_back_ios_new</span>
         <p>back</p>
       </Link>
