@@ -1,5 +1,7 @@
 version: '3'
 services:
+  web:
+  api:
   mysql:
     image: 'mysql:8.0.30'
     ports:
