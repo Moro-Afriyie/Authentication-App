@@ -1,13 +1,26 @@
 version: '3'
 services:
   web:
+    build: ./client
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=development
   api:
+    build: ./server
+    ports:
+      - 8080:8080
+
   mysql:
-    image: 'mysql:8.0.30'
+    image: mysql:8.0.30
     ports:
       - '3306:3306'
     environment:
-      MYSQL_ROOT_PASSWORD: 'admin'
-      MYSQL_USER: 'test'
-      MYSQL_PASSWORD: 'test'
-      MYSQL_DATABASE: 'test'
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_DATABASE
+    volumes:
+      - mysql-data:/var/lib/mysql
+volumes:
+  mysql-data:
