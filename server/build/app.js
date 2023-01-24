@@ -17,7 +17,7 @@ var app = (0, express_1.default)();
 app.use((0, helmet_1.default)());
 // setup cross-origin resource header sharing
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.CORS_ORIGIN,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));

@@ -153,18 +153,11 @@ router.put('/', jwtAuth_1.checkIsLoggedIn, storageMiddleware_1.storageMiddleware
     });
 }); }));
 // just to verify the users will delete it later
-router.get('/hello', jwtAuth_1.checkIsLoggedIn, function (req, res) {
-    res.send(req.user);
-});
-router.get('/delete', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, exports.UserRepository.clear()];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); });
+// router.get('/hello', checkIsLoggedIn, (req, res) => {
+// 	res.send(req.user);
+// });
+// router.get('/delete', async (req, res) => {
+// 	await UserRepository.clear();
+// });
 exports.default = { path: '/users', router: router };
 //# sourceMappingURL=users.js.map
