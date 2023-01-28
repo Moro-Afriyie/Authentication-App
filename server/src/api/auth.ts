@@ -164,6 +164,8 @@ router.get('/github/callback', (req: Request, res: Response, next: NextFunction)
 			passReqToCallback: true,
 		},
 		(err, user, info) => {
+			console.log('error: ', err);
+			console.log('info: ', info);
 			if (err || !user) {
 				return res.redirect(process.env.CLIENT_HOME_PAGE_URL + '?error=' + info?.message);
 			}
