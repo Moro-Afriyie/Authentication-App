@@ -212,6 +212,8 @@ router.get('/github/callback', function (req, res, next) {
         session: false,
         passReqToCallback: true,
     }, function (err, user, info) {
+        console.log('error: ', err);
+        console.log('info: ', info);
         if (err || !user) {
             return res.redirect(process.env.CLIENT_HOME_PAGE_URL + '?error=' + (info === null || info === void 0 ? void 0 : info.message));
         }
